@@ -73,6 +73,19 @@
   /* Modal overlay */
   .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(6px); }
   .modal-box { background:#0e0e0e; border:1px solid #D4AF37; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; }
+
+  /* Input with icon */
+  .agx-input-icon-wrap { position: relative; }
+  .agx-input-icon-wrap .agx-input { padding-left: 44px; }
+  .agx-input-icon-wrap .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D4AF37;
+    font-size: 18px;
+    pointer-events: none;
+  }
 </style>
 </head>
 
@@ -605,6 +618,18 @@
           <option>República Dominicana</option><option>Estados Unidos</option><option>Otro</option>
         </select>
         <input class="agx-input" id="field-website" placeholder="Sitio Web o Red Social del Negocio" type="text"/>
+
+        <!-- ── NUEVOS CAMPOS: WhatsApp y Correo ── -->
+        <div class="agx-input-icon-wrap">
+          <span class="material-symbols-outlined input-icon" style="font-size:20px;">phone_iphone</span>
+          <input class="agx-input" id="field-whatsapp" placeholder="WhatsApp (con código de país, ej: +57 300...)" type="tel"/>
+        </div>
+        <div class="agx-input-icon-wrap">
+          <span class="material-symbols-outlined input-icon" style="font-size:20px;">mail</span>
+          <input class="agx-input" id="field-email" placeholder="Correo Electrónico" type="email" style="text-transform:none;"/>
+        </div>
+        <!-- ── FIN NUEVOS CAMPOS ── -->
+
       </div>
 
       <!-- Contexto adicional según plan -->
@@ -752,7 +777,7 @@ function openForm(plan) {
   document.getElementById('field-business-type').value = '';
 
   // Reset basic fields
-  ['field-business-name','field-contact-name','field-website'].forEach(id => {
+  ['field-business-name','field-contact-name','field-website','field-whatsapp','field-email'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
