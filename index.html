@@ -4,7 +4,39 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>AGORAX | Escalado de Alto Rendimiento</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+/* ── INTEGRACIÓN CRM AGORAX ── */
+async function submitAndOpenCalendar(e) {
+  e.preventDefault();
+  const calLink = document.getElementById('calendar-btn').getAttribute('href');
+
+  const fd = new FormData();
+  fd.append('clinic_name',        (document.getElementById('field-business-name')?.value   || '').trim());
+  fd.append('contact_name',       (document.getElementById('field-contact-name')?.value    || '').trim());
+  fd.append('email',              (document.getElementById('field-email')?.value            || '').trim());
+  fd.append('phone',              (document.getElementById('field-whatsapp')?.value         || '').trim());
+  fd.append('country',            document.getElementById('field-country')?.value           || 'US');
+  fd.append('website',            (document.getElementById('field-website')?.value          || '').trim());
+  fd.append('meta_or_google_ads', (document.getElementById('field-platforms')?.value        || '').trim());
+  fd.append('estimated_budget',   (document.getElementById('field-monthly-budget')?.value   || '').trim());
+  fd.append('main_objective',     (document.getElementById('field-business-type')?.value    || '').trim());
+  fd.append('notes',              document.getElementById('field-revenue')?.value
+                                    ? 'Ingresos aprox: ' + document.getElementById('field-revenue').value
+                                    : '');
+  fd.append('source_url',  'https://jhonhb16.github.io/Agorax-digital');
+  fd.append('company_fax', ''); // honeypot vacío
+
+  // Enviar al CRM (sin bloquear la UX)
+  fetch('https://iagentflow.pro/api/v1/leads/website_form', {
+    method: 'POST',
+    body: fd
+  }).catch(() => {});
+
+  // Abrir calendario inmediatamente
+  window.open(calLink, '_blank');
+}
+
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -13,24 +45,19 @@ tailwind.config = {
   theme:{
     extend:{
       colors:{
-        /* ── DORADO COMO PRIMARIO ── */
         "primary":         "#D4AF37",
         "primary-dim":     "#B8961F",
         "primary-glow":    "rgba(212,175,55,0.15)",
         "on-primary":      "#000000",
-        /* ── SUPERFICIES OSCURAS ── */
         "background":           "#080808",
         "surface":              "#080808",
         "surface-container":    "#0f0f0f",
         "surface-container-low":"#0d0d0d",
         "surface-container-high":"#141414",
         "surface-container-highest":"#1c1c1c",
-        /* ── TEXTO ── */
         "on-surface":          "#f0f0f0",
         "on-surface-variant":  "#888888",
-        /* ── ERROR ── */
         "error":               "#ff4d4d",
-        /* ── BORDES ── */
         "outline-variant":     "#2a2a2a",
         "outline":             "#444",
       },
@@ -46,42 +73,27 @@ tailwind.config = {
 </script>
 
 <style>
-/* ── BASE ── */
 *{box-sizing:border-box;}
 .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle;}
-
-/* ── HERO BG ── */
 .hero-gradient{background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,175,55,0.07) 0%, transparent 70%);}
-
-/* ── PLAN CARD ── */
 .plan-card{transition:transform .3s ease,box-shadow .3s ease;}
 .plan-card:hover{transform:translateY(-6px);}
-
-/* ── SCROLLBAR ── */
 .custom-scrollbar::-webkit-scrollbar{height:4px;}
 .custom-scrollbar::-webkit-scrollbar-track{background:#0d0d0d;}
 .custom-scrollbar::-webkit-scrollbar-thumb{background:#D4AF37;}
-
-/* ── TICKER ── */
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-track{display:flex;width:max-content;animation:ticker 32s linear infinite;}
 .ticker-track:hover{animation-play-state:paused;}
-
-/* ── NOTIF ── */
 @keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
 .notif-enter{animation:slideIn .4s cubic-bezier(.22,.68,0,1.2) forwards;}
 .notif-exit{animation:slideOut .3s ease-in forwards;}
 .notif-dot{animation:pulse 1.8s ease-in-out infinite;}
-
-/* ── MODAL ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .form-appear{animation:fadeUp .45s ease forwards;}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px);}
 .modal-box{background:#080808;border:1px solid #D4AF37;max-width:620px;width:100%;max-height:92vh;overflow-y:auto;}
-
-/* ── INPUTS ── */
 .agx-input{background:#0d0d0d;border:1px solid #2a2a2a;color:#f0f0f0;padding:14px 16px;width:100%;font-family:'Space Grotesk',monospace;font-size:13px;text-transform:uppercase;letter-spacing:.07em;transition:border-color .2s;outline:none;}
 .agx-input:focus{border-color:#D4AF37;}
 .agx-input::placeholder{color:#333;}
@@ -89,64 +101,38 @@ tailwind.config = {
 .agx-input-icon-wrap{position:relative;}
 .agx-input-icon-wrap .agx-input{padding-left:44px;}
 .agx-input-icon-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#D4AF37;font-size:18px;pointer-events:none;}
-
-/* ── PLAN SELECTOR ── */
 .plan-opt{cursor:pointer;border:2px solid transparent;transition:all .25s;}
 .plan-opt:hover{border-color:rgba(212,175,55,.4);}
 .plan-opt.selected{border-color:#D4AF37;background:#1a1500;}
 .plan-opt.selected .plan-opt-dot{background:#D4AF37;}
-
-/* ── REVIEW CARD ── */
 .review-card{transition:transform .3s ease,border-color .3s;}
 .review-card:hover{transform:translateY(-4px);border-color:rgba(212,175,55,.4)!important;}
-
-/* ── FAQ ── */
 .faq-item{border-bottom:1px solid #1c1c1c;}
 .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;}
 .faq-answer.open{max-height:400px;}
 .faq-icon{transition:transform .3s ease;}
 .faq-icon.open{transform:rotate(45deg);}
-
-/* ── TIMELINE ── */
 .timeline-line{position:absolute;left:23px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#D4AF37,rgba(212,175,55,0.05));}
 .timeline-dot{width:48px;height:48px;background:#D4AF37;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
-
-/* ── LOGOS TICKER ── */
 @keyframes logoTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .logo-track{display:flex;width:max-content;animation:logoTicker 22s linear infinite;}
 .logo-track:hover{animation-play-state:paused;}
-
-/* ── COMPARE ── */
 .compare-row:nth-child(even){background:rgba(212,175,55,0.02);}
-
-/* ── WHATSAPP ── */
 .wa-float{position:fixed;bottom:20px;left:20px;z-index:9997;}
 @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.4)}70%{box-shadow:0 0 0 14px rgba(37,211,102,0)}}
 .wa-btn{animation:waPulse 2.5s infinite;}
-
-/* ── VIDEO ── */
 .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;}
 .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;}
-
-/* ── SCROLL REVEAL ── */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
-
-/* ── GLOW EFFECTS ── */
 .glow-gold{box-shadow:0 0 40px rgba(212,175,55,0.18);}
 .glow-text{text-shadow:0 0 40px rgba(212,175,55,0.35);}
-
-/* ── GOLD SHIMMER on recommended badge ── */
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 .gold-shimmer{background:linear-gradient(90deg,#B8961F 0%,#F5D060 40%,#D4AF37 60%,#B8961F 100%);background-size:200% auto;animation:shimmer 3s linear infinite;color:#000;}
-
-/* ── MOBILE NAV ── */
 #mobile-menu{display:none;flex-direction:column;gap:0;background:#080808;border-top:1px solid #1c1c1c;}
 #mobile-menu.open{display:flex;}
 #mobile-menu a{padding:16px 24px;font-family:'Space Grotesk',monospace;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;border-bottom:1px solid #111;transition:color .2s,background .2s;}
 #mobile-menu a:hover{color:#D4AF37;background:#0d0d0d;}
-
-/* ── MOBILE OPTIMIZATIONS ── */
 @media(max-width:768px){
   h1{font-size:2.6rem!important;line-height:.92!important;}
   .hero-big{font-size:2.6rem!important;}
@@ -177,8 +163,6 @@ tailwind.config = {
   .wa-btn{padding:12px!important;border-radius:50%!important;}
   #notif-container{max-width:260px!important;right:10px!important;bottom:70px!important;}
 }
-
-/* ── GRID FIXES MOBILE ── */
 @media(max-width:640px){
   .grid-cols-2{grid-template-columns:repeat(2,1fr)!important;}
   .compare-row{grid-template-columns:1fr 1fr!important;}
@@ -190,7 +174,6 @@ tailwind.config = {
 
 <body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
 
-<!-- ══ WHATSAPP ══ -->
 <div class="wa-float">
   <a href="https://wa.me/TU_NUMERO?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20AGORAX" target="_blank"
      class="wa-btn flex items-center gap-3 bg-[#25D366] text-white font-label font-bold uppercase text-xs tracking-widest px-5 py-3 shadow-2xl hover:bg-[#1ebe5d] transition-colors"
@@ -200,16 +183,13 @@ tailwind.config = {
   </a>
 </div>
 
-<!-- ══ PUSH NOTIFICATIONS ══ -->
 <div id="notif-container" class="fixed bottom-6 right-6 z-[9998] flex flex-col gap-3 items-end pointer-events-none" style="max-width:300px"></div>
 
-<!-- ══════════ NAV ══════════ -->
 <nav class="fixed top-0 w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/5" style="border-bottom:1px solid #1a1400;">
   <div class="flex justify-between items-center px-5 md:px-8 py-4 max-w-7xl mx-auto">
     <div class="flex items-center">
       <img alt="AGORAX" class="h-12 w-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
     </div>
-    <!-- Desktop links -->
     <div class="hidden md:flex gap-6 items-center">
       <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#proceso">Proceso</a>
       <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#results">Resultados</a>
@@ -217,14 +197,12 @@ tailwind.config = {
       <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#testimoniales">Testimoniales</a>
       <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#faq">FAQ</a>
     </div>
-    <!-- Mobile hamburger -->
     <button class="md:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()" aria-label="Menú">
       <span id="ham1" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
       <span id="ham2" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
       <span id="ham3" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
     </button>
   </div>
-  <!-- Mobile menu -->
   <div id="mobile-menu">
     <a href="#proceso" onclick="toggleMenu()">Proceso</a>
     <a href="#results" onclick="toggleMenu()">Resultados</a>
@@ -235,7 +213,6 @@ tailwind.config = {
   </div>
 </nav>
 
-<!-- ══════════ HERO ══════════ -->
 <header class="relative pt-36 md:pt-48 pb-20 md:pb-32 px-5 md:px-8 hero-gradient overflow-hidden">
   <div class="max-w-7xl mx-auto flex flex-col items-start gap-8 md:gap-12">
     <div class="space-y-5 max-w-5xl w-full">
@@ -260,13 +237,11 @@ tailwind.config = {
       </div>
     </div>
   </div>
-  <!-- Decorative bg text — hidden mobile -->
   <div class="absolute -right-16 top-32 opacity-[0.04] select-none pointer-events-none hidden xl:block">
     <span class="text-[22rem] font-black leading-none text-primary">AGX</span>
   </div>
 </header>
 
-<!-- ══════════ TICKER ══════════ -->
 <div class="overflow-hidden py-3 md:py-4" style="background:#D4AF37;border-top:2px solid rgba(212,175,55,.5);border-bottom:2px solid rgba(212,175,55,.5);">
   <div class="ticker-track">
     <span class="font-label font-black uppercase text-black text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Resultados Reales. Sin Promesas.</span>
@@ -279,7 +254,6 @@ tailwind.config = {
     <span class="font-label font-black uppercase text-black/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
     <span class="font-label font-black uppercase text-black text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">No manejamos anuncios. Escalamos lo que vende.</span>
     <span class="font-label font-black uppercase text-black/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
-    <!-- duplicate -->
     <span class="font-label font-black uppercase text-black text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Resultados Reales. Sin Promesas.</span>
     <span class="font-label font-black uppercase text-black/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
     <span class="font-label font-black uppercase text-black text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">+6 Años de Experiencia Real</span>
@@ -293,7 +267,6 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ══════════ COUNTERS ══════════ -->
 <section class="py-16 md:py-24 px-5 md:px-8 bg-black border-b border-outline-variant/30" id="counters">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-10 md:mb-16 reveal">
@@ -332,7 +305,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ LOGOS ══════════ -->
 <section class="py-10 md:py-16 px-5 md:px-8 bg-surface-container-low border-b border-outline-variant/20">
   <div class="max-w-7xl mx-auto">
     <p class="text-center font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-8">Marcas que han confiado en el sistema</p>
@@ -364,7 +336,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ IDENTIFICATION ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
   <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-20 items-start">
     <div class="md:sticky md:top-32">
@@ -388,7 +359,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ BREAKING BELIEFS ══════════ -->
 <section class="py-24 md:py-40 px-5 md:px-8 bg-surface">
   <div class="max-w-5xl mx-auto text-center space-y-10 md:space-y-16">
     <h2 class="text-4xl md:text-8xl font-black uppercase tracking-tighter italic leading-none">Escalar no es <br/><span class="text-primary">gastar más</span></h2>
@@ -401,7 +371,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ PROOF GALLERY ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low" id="results">
   <div class="max-w-7xl mx-auto">
     <div class="mb-12 md:mb-20">
@@ -456,7 +425,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ VIDEO ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-black">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-10 md:mb-16 reveal">
@@ -476,7 +444,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ SOLUTION ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="proceso">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 md:gap-20">
     <div class="md:w-1/3">
@@ -496,7 +463,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ TIMELINE ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
   <div class="max-w-4xl mx-auto">
     <div class="text-center mb-14 md:mb-20 reveal">
@@ -549,7 +515,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ DIFFERENTIATION ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 text-black" style="background:#D4AF37;">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
     <div class="md:w-1/2"><h2 class="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] italic">No somos más creativos… <br/> somos más <span class="underline">rápidos.</span></h2></div>
@@ -557,7 +522,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ COMPARATIVA ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-14 md:mb-20 reveal">
@@ -579,7 +543,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ INTERNACIONAL ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
   <div class="max-w-7xl mx-auto">
     <div class="mb-10 md:mb-16">
@@ -600,7 +563,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ PLANES ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-black" id="planes">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-14 md:mb-20">
@@ -608,8 +570,6 @@ tailwind.config = {
       <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic">Planes de Alto Rendimiento</h2>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 items-start">
-
-      <!-- Sprint -->
       <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
         <div class="mb-6 md:mb-8">
           <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Sprint de Validación</h3>
@@ -630,8 +590,6 @@ tailwind.config = {
         </ul>
         <button onclick="openForm('sprint')" class="w-full py-4 border-2 border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-colors text-sm">Empezar Sprint</button>
       </div>
-
-      <!-- Escalado Base — RECOMENDADO -->
       <div class="plan-card p-7 md:p-10 flex flex-col h-full relative z-10" style="border:4px solid #D4AF37;background:#0e0b00;box-shadow:0 0 60px rgba(212,175,55,0.2);">
         <div class="absolute top-0 right-0 font-black text-[11px] px-5 py-2 uppercase tracking-widest gold-shimmer">RECOMENDADO</div>
         <div class="mb-6 md:mb-8">
@@ -654,8 +612,6 @@ tailwind.config = {
         </ul>
         <button onclick="openForm('base')" class="w-full py-5 font-black uppercase tracking-widest transition-all text-base text-black hover:opacity-90" style="background:#D4AF37;box-shadow:0 0 25px rgba(212,175,55,0.35);">Quiero Escalar</button>
       </div>
-
-      <!-- Enterprise -->
       <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
         <div class="mb-6 md:mb-8">
           <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Enterprise</h3>
@@ -672,12 +628,10 @@ tailwind.config = {
         </ul>
         <button onclick="openForm('enterprise')" class="w-full py-4 font-black uppercase tracking-widest hover:opacity-90 transition-colors text-sm text-black" style="background:#D4AF37;">Hablar con ventas</button>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ══════════ TEAM ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface">
   <div class="max-w-7xl mx-auto">
     <div class="mb-12 md:mb-20">
@@ -708,7 +662,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ TESTIMONIALS ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low" id="testimoniales">
   <div class="max-w-7xl mx-auto">
     <div class="mb-10 md:mb-16">
@@ -724,7 +677,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ REVIEWS GOOGLE ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="reviews">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12 md:mb-16 reveal">
@@ -772,7 +724,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ FILTER ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low border-y border-outline-variant/20">
   <div class="max-w-7xl mx-auto space-y-12 md:space-y-20">
     <div class="text-center">
@@ -804,7 +755,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ FAQ ══════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="faq">
   <div class="max-w-3xl mx-auto">
     <div class="text-center mb-12 md:mb-20 reveal">
@@ -829,7 +779,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ FINAL CTA ══════════ -->
 <section class="py-24 md:py-40 px-5 md:px-8 bg-surface relative overflow-hidden">
   <div class="absolute inset-0" style="background:radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.06), transparent);"></div>
   <div class="max-w-5xl mx-auto text-center space-y-8 md:space-y-12 relative z-10">
@@ -843,7 +792,6 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ══════════ FOOTER ══════════ -->
 <footer class="bg-black w-full py-10 md:py-12 px-5 md:px-8 border-t border-outline-variant/20">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 w-full">
     <img alt="AGORAX" class="w-auto h-10" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
@@ -856,9 +804,6 @@ tailwind.config = {
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     MODAL FORMULARIO
-══════════════════════════════════════════ -->
 <div id="form-modal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
   <div class="modal-box form-appear" id="modal-box">
     <div id="modal-header" class="p-6 md:p-8 flex items-start justify-between gap-4 border-b border-primary/30" style="background:rgba(212,175,55,0.08);">
@@ -902,7 +847,7 @@ tailwind.config = {
           <p class="font-label text-[10px] uppercase tracking-widest text-primary mb-2">Antes de continuar</p>
           <p class="font-bold text-sm leading-relaxed text-on-surface-variant">Piensa bien tu <strong class="text-white">fecha y hora disponible</strong> para reunirnos. Revisaremos tu caso antes de la llamada para aprovechar cada minuto.</p>
         </div>
-        <a id="calendar-btn" href="https://calendar.app.google/HoeyJ8i7i9jV32FMA" target="_blank"
+        <a id="calendar-btn" onclick="submitAndOpenCalendar(event)" href="https://calendar.app.google/HoeyJ8i7i9jV32FMA" target="_blank"
            class="w-full py-4 md:py-5 font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 text-base text-black hover:opacity-90" style="background:#D4AF37;">
           <span class="material-symbols-outlined">calendar_month</span>
           Agendar Reunión de Diagnóstico
@@ -913,9 +858,7 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════ JS ══════════════════════════════════════════ -->
 <script>
-/* ── MOBILE MENU ── */
 let menuOpen = false;
 function toggleMenu() {
   menuOpen = !menuOpen;
@@ -926,7 +869,6 @@ function toggleMenu() {
   document.getElementById('ham3').style.transform = menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
 }
 
-/* ── PUSH NOTIFS — cada 6-8 segundos ── */
 const notifMsgs = [
   {icon:"🇲🇽",text:"<strong>Marca de México</strong> acaba de agendar su diagnóstico."},
   {icon:"🇨🇴",text:"<strong>3 negocios más</strong> se han unido esta semana."},
@@ -950,17 +892,15 @@ function showNotif(){
   nc.appendChild(el);
   setTimeout(()=>{ el.className='notif-exit pointer-events-auto'; el.addEventListener('animationend',()=>el.remove()); }, 4500);
 }
-// Primera aparición a los 3s, luego cada 6-8s
 setTimeout(()=>{
   showNotif();
   function scheduleNext(){
-    const delay = 6000 + Math.random() * 2000; // 6000–8000ms
+    const delay = 6000 + Math.random() * 2000;
     setTimeout(()=>{ showNotif(); scheduleNext(); }, delay);
   }
   scheduleNext();
 }, 3000);
 
-/* ── COUNTERS ── */
 document.querySelectorAll('.counter-val').forEach(el=>{
   const obs=new IntersectionObserver(e=>{ if(e[0].isIntersecting){
     const target=parseInt(el.dataset.target), suffix=el.dataset.suffix||'', dur=2000, start=performance.now();
@@ -970,18 +910,15 @@ document.querySelectorAll('.counter-val').forEach(el=>{
   }},{threshold:.5}); obs.observe(el);
 });
 
-/* ── SCROLL REVEAL ── */
 const ro=new IntersectionObserver(e=>e.forEach(x=>{ if(x.isIntersecting){x.target.classList.add('visible');ro.unobserve(x.target);} }),{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
-/* ── FAQ ── */
 function toggleFaq(btn){
   const ans=btn.nextElementSibling, icon=btn.querySelector('.faq-icon'), open=ans.classList.contains('open');
   document.querySelectorAll('.faq-answer.open').forEach(a=>{a.classList.remove('open');a.previousElementSibling.querySelector('.faq-icon').classList.remove('open');});
   if(!open){ans.classList.add('open');icon.classList.add('open');}
 }
 
-/* ── MODAL ── */
 const planData={
   sprint:{label:'Plan Sprint de Validación',title:'Sprint de Validación',price:'USD 280 / Mes',calLink:'https://calendar.app.google/HoeyJ8i7i9jV32FMA',extra:[{id:'field-monthly-budget',placeholder:'Inversión actual en pauta (USD/mes)  ·  Ej: $500',type:'text'}]},
   base:{label:'Plan Escalado Base',title:'Escalado Base',price:'USD 650 / Mes + 5% excedente',calLink:'https://calendar.app.google/HoeyJ8i7i9jV32FMA',extra:[{id:'field-monthly-budget',placeholder:'Inversión actual en pauta (USD/mes)  ·  Ej: $2.000',type:'text'},{id:'field-platforms',placeholder:'Plataformas  ·  Ej: Meta Ads, Google Ads...',type:'text'}]},
