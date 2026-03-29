@@ -4,39 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>AGORAX | Escalado de Alto Rendimiento</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
-/* ── INTEGRACIÓN CRM AGORAX ── */
-async function submitAndOpenCalendar(e) {
-  e.preventDefault();
-  const calLink = document.getElementById('calendar-btn').getAttribute('href');
-
-  const fd = new FormData();
-  fd.append('clinic_name',        (document.getElementById('field-business-name')?.value   || '').trim());
-  fd.append('contact_name',       (document.getElementById('field-contact-name')?.value    || '').trim());
-  fd.append('email',              (document.getElementById('field-email')?.value            || '').trim());
-  fd.append('phone',              (document.getElementById('field-whatsapp')?.value         || '').trim());
-  fd.append('country',            document.getElementById('field-country')?.value           || 'US');
-  fd.append('website',            (document.getElementById('field-website')?.value          || '').trim());
-  fd.append('meta_or_google_ads', (document.getElementById('field-platforms')?.value        || '').trim());
-  fd.append('estimated_budget',   (document.getElementById('field-monthly-budget')?.value   || '').trim());
-  fd.append('main_objective',     (document.getElementById('field-business-type')?.value    || '').trim());
-  fd.append('notes',              document.getElementById('field-revenue')?.value
-                                    ? 'Ingresos aprox: ' + document.getElementById('field-revenue').value
-                                    : '');
-  fd.append('source_url',  'https://jhonhb16.github.io/Agorax-digital');
-  fd.append('company_fax', ''); // honeypot vacío
-
-  // Enviar al CRM (sin bloquear la UX)
-  fetch('https://iagentflow.pro/api/v1/leads/website_form', {
-    method: 'POST',
-    body: fd
-  }).catch(() => {});
-
-  // Abrir calendario inmediatamente
-  window.open(calLink, '_blank');
-}
-
-</script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -129,6 +97,12 @@ tailwind.config = {
 .glow-text{text-shadow:0 0 40px rgba(212,175,55,0.35);}
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 .gold-shimmer{background:linear-gradient(90deg,#B8961F 0%,#F5D060 40%,#D4AF37 60%,#B8961F 100%);background-size:200% auto;animation:shimmer 3s linear infinite;color:#000;}
+/* ── PLAN RECOMENDADO: pulse glow animation ── */
+@keyframes planGlow{
+  0%,100%{box-shadow:0 0 60px rgba(212,175,55,0.25),0 0 0 0 rgba(212,175,55,0.12);}
+  50%{box-shadow:0 0 90px rgba(212,175,55,0.45),0 0 0 8px rgba(212,175,55,0.04);}
+}
+.plan-featured{animation:planGlow 3s ease-in-out infinite;}
 #mobile-menu{display:none;flex-direction:column;gap:0;background:#080808;border-top:1px solid #1c1c1c;}
 #mobile-menu.open{display:flex;}
 #mobile-menu a{padding:16px 24px;font-family:'Space Grotesk',monospace;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;border-bottom:1px solid #111;transition:color .2s,background .2s;}
@@ -563,6 +537,7 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ═══════════════════ PLANES ═══════════════════ -->
 <section class="py-20 md:py-32 px-5 md:px-8 bg-black" id="planes">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-14 md:mb-20">
@@ -570,6 +545,8 @@ tailwind.config = {
       <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic">Planes de Alto Rendimiento</h2>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 items-start">
+
+      <!-- Plan Sprint -->
       <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
         <div class="mb-6 md:mb-8">
           <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Sprint de Validación</h3>
@@ -590,28 +567,41 @@ tailwind.config = {
         </ul>
         <button onclick="openForm('sprint')" class="w-full py-4 border-2 border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-colors text-sm">Empezar Sprint</button>
       </div>
-      <div class="plan-card p-7 md:p-10 flex flex-col h-full relative z-10" style="border:4px solid #D4AF37;background:#0e0b00;box-shadow:0 0 60px rgba(212,175,55,0.2);">
-        <div class="absolute top-0 right-0 font-black text-[11px] px-5 py-2 uppercase tracking-widest gold-shimmer">RECOMENDADO</div>
-        <div class="mb-6 md:mb-8">
-          <h3 class="text-3xl md:text-4xl font-black uppercase italic mb-2 text-primary">Escalado Base</h3>
-          <div class="flex items-baseline gap-2 flex-wrap">
-            <span class="text-4xl md:text-6xl font-black">USD 650</span>
-            <span class="text-on-surface-variant font-label uppercase text-[10px] font-bold">/ Mes + 5% excedente</span>
-          </div>
+
+      <!-- ══ Plan RECOMENDADO — Escalado Base ══ -->
+      <div class="plan-card plan-featured relative z-10 flex flex-col h-full" style="border:4px solid #D4AF37;background:linear-gradient(160deg,#100d00 0%,#0e0b00 60%,#120e00 100%);">
+        <!-- Etiqueta RECOMENDADO -->
+        <div class="absolute -top-px left-0 right-0 flex justify-center pointer-events-none">
+          <span class="gold-shimmer font-black text-[11px] px-8 py-2 uppercase tracking-widest" style="letter-spacing:.18em;">⚡ RECOMENDADO ⚡</span>
         </div>
-        <div class="mb-6 p-4 border-l-4 border-primary" style="background:rgba(212,175,55,0.06);"><p class="text-sm font-bold italic text-on-surface-variant">Tu crecimiento deja de depender de la suerte...</p></div>
-        <ul class="space-y-3 mb-10 flex-grow">
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Pauta hasta USD 8.000/mes</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Meta / Google / TikTok Ads</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Estructura de escalado</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Testing creativo constante</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Anuncios de performance</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Revisión estratégica</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Optimización continua</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">2 revisiones estratégicas/mes</span></li>
-        </ul>
-        <button onclick="openForm('base')" class="w-full py-5 font-black uppercase tracking-widest transition-all text-base text-black hover:opacity-90" style="background:#D4AF37;box-shadow:0 0 25px rgba(212,175,55,0.35);">Quiero Escalar</button>
+        <!-- Franja dorada decorativa superior -->
+        <div class="absolute top-0 left-0 right-0 h-[3px]" style="background:linear-gradient(90deg,transparent,#F5D060,#D4AF37,#F5D060,transparent);"></div>
+
+        <div class="p-7 md:p-10 flex flex-col flex-grow pt-10">
+          <div class="mb-6 md:mb-8">
+            <h3 class="text-3xl md:text-4xl font-black uppercase italic mb-2 text-primary">Escalado Base</h3>
+            <div class="flex items-baseline gap-2 flex-wrap">
+              <span class="text-4xl md:text-6xl font-black text-white">USD 650</span>
+              <span class="text-on-surface-variant font-label uppercase text-[10px] font-bold">/ Mes + 5% excedente</span>
+            </div>
+          </div>
+          <div class="mb-6 p-4 border-l-4 border-primary" style="background:rgba(212,175,55,0.08);"><p class="text-sm font-bold italic text-on-surface-variant">Tu crecimiento deja de depender de la suerte...</p></div>
+          <ul class="space-y-3 mb-10 flex-grow">
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Pauta hasta USD 8.000/mes</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Meta / Google / TikTok Ads</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Estructura de escalado</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Testing creativo constante</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Anuncios de performance</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Revisión estratégica</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">Optimización continua</span></li>
+            <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight text-white">2 revisiones estratégicas/mes</span></li>
+          </ul>
+          <button onclick="openForm('base')" class="w-full py-5 font-black uppercase tracking-widest transition-all text-base text-black hover:opacity-90" style="background:#D4AF37;box-shadow:0 0 30px rgba(212,175,55,0.5),0 0 60px rgba(212,175,55,0.15);">Quiero Escalar →</button>
+          <p class="text-center font-label text-[9px] text-primary/60 uppercase tracking-widest mt-3">El plan más elegido</p>
+        </div>
       </div>
+
+      <!-- Plan Enterprise -->
       <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
         <div class="mb-6 md:mb-8">
           <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Enterprise</h3>
@@ -628,6 +618,7 @@ tailwind.config = {
         </ul>
         <button onclick="openForm('enterprise')" class="w-full py-4 font-black uppercase tracking-widest hover:opacity-90 transition-colors text-sm text-black" style="background:#D4AF37;">Hablar con ventas</button>
       </div>
+
     </div>
   </div>
 </section>
@@ -804,6 +795,7 @@ tailwind.config = {
   </div>
 </footer>
 
+<!-- ═══════════════════ MODAL FORM ═══════════════════ -->
 <div id="form-modal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
   <div class="modal-box form-appear" id="modal-box">
     <div id="modal-header" class="p-6 md:p-8 flex items-start justify-between gap-4 border-b border-primary/30" style="background:rgba(212,175,55,0.08);">
@@ -847,6 +839,7 @@ tailwind.config = {
           <p class="font-label text-[10px] uppercase tracking-widest text-primary mb-2">Antes de continuar</p>
           <p class="font-bold text-sm leading-relaxed text-on-surface-variant">Piensa bien tu <strong class="text-white">fecha y hora disponible</strong> para reunirnos. Revisaremos tu caso antes de la llamada para aprovechar cada minuto.</p>
         </div>
+        <!-- CAMBIO 1: onclick="submitAndOpenCalendar(event)" agregado al calendar-btn -->
         <a id="calendar-btn" onclick="submitAndOpenCalendar(event)" href="https://calendar.app.google/HoeyJ8i7i9jV32FMA" target="_blank"
            class="w-full py-4 md:py-5 font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 text-base text-black hover:opacity-90" style="background:#D4AF37;">
           <span class="material-symbols-outlined">calendar_month</span>
@@ -869,6 +862,7 @@ function toggleMenu() {
   document.getElementById('ham3').style.transform = menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
 }
 
+// ── NOTIFICACIONES: primera en 15s, luego cada 15–17s ──
 const notifMsgs = [
   {icon:"🇲🇽",text:"<strong>Marca de México</strong> acaba de agendar su diagnóstico."},
   {icon:"🇨🇴",text:"<strong>3 negocios más</strong> se han unido esta semana."},
@@ -892,14 +886,15 @@ function showNotif(){
   nc.appendChild(el);
   setTimeout(()=>{ el.className='notif-exit pointer-events-auto'; el.addEventListener('animationend',()=>el.remove()); }, 4500);
 }
+// Primera notificación a los 15 segundos
 setTimeout(()=>{
   showNotif();
   function scheduleNext(){
-    const delay = 6000 + Math.random() * 2000;
+    const delay = 15000 + Math.random() * 2000; // 15–17 segundos
     setTimeout(()=>{ showNotif(); scheduleNext(); }, delay);
   }
   scheduleNext();
-}, 3000);
+}, 15000);
 
 document.querySelectorAll('.counter-val').forEach(el=>{
   const obs=new IntersectionObserver(e=>{ if(e[0].isIntersecting){
@@ -946,6 +941,37 @@ function openForm(plan){
 function closeForm(){document.getElementById('form-modal').classList.add('hidden');document.body.style.overflow='';}
 function handleOverlayClick(e){if(e.target===document.getElementById('form-modal'))closeForm();}
 function selectBusinessType(el,val){document.querySelectorAll('.plan-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');document.getElementById('field-business-type').value=val;}
+
+/* ── CAMBIO 2: INTEGRACIÓN CRM AGORAX ── */
+async function submitAndOpenCalendar(e) {
+  e.preventDefault();
+  const calLink = document.getElementById('calendar-btn').getAttribute('href');
+
+  const fd = new FormData();
+  fd.append('clinic_name',        (document.getElementById('field-business-name')?.value   || '').trim());
+  fd.append('contact_name',       (document.getElementById('field-contact-name')?.value    || '').trim());
+  fd.append('email',              (document.getElementById('field-email')?.value            || '').trim());
+  fd.append('phone',              (document.getElementById('field-whatsapp')?.value         || '').trim());
+  fd.append('country',            document.getElementById('field-country')?.value           || 'US');
+  fd.append('website',            (document.getElementById('field-website')?.value          || '').trim());
+  fd.append('meta_or_google_ads', (document.getElementById('field-platforms')?.value        || '').trim());
+  fd.append('estimated_budget',   (document.getElementById('field-monthly-budget')?.value   || '').trim());
+  fd.append('main_objective',     (document.getElementById('field-business-type')?.value    || '').trim());
+  fd.append('notes',              document.getElementById('field-revenue')?.value
+                                    ? 'Ingresos aprox: ' + document.getElementById('field-revenue').value
+                                    : '');
+  fd.append('source_url',  'https://jhonhb16.github.io/Agorax-digital');
+  fd.append('company_fax', ''); // honeypot vacío
+
+  // Enviar al CRM sin bloquear la UX
+  fetch('https://iagentflow.pro/api/v1/leads/website_form', {
+    method: 'POST',
+    body: fd
+  }).catch(() => {});
+
+  // Abrir calendario inmediatamente
+  window.open(calLink, '_blank');
+}
 </script>
 </body>
 </html>
