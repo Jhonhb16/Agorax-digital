@@ -3,287 +3,466 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>AGORAX | High-Performance E-commerce Scaling</title>
+<title>AGORAX | Escalado de Alto Rendimiento</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        colors: {
-          "on-tertiary-fixed": "#003d42","on-error": "#450900","surface-tint": "#D4AF37","surface-bright": "#2c2c2c","on-surface-variant": "#adaaaa","on-secondary-fixed": "#004a24","secondary-fixed": "#E5C158","on-primary-container": "#453100","secondary-container": "#006d38","surface-container-low": "#131313","tertiary-fixed-dim": "#00dbec","primary-fixed": "#F6D77D","inverse-on-surface": "#565554","on-primary": "#2D2200","primary-container": "#D4AF37","secondary-dim": "#7aeb9d","outline-variant": "#494847","secondary": "#E5C158","surface-dim": "#0e0e0e","primary-dim": "#C5A028","background": "#0e0e0e","tertiary-dim": "#00dbec","tertiary": "#8af2ff","tertiary-container": "#0eeafd","surface-container-highest": "#262626","primary-fixed-dim": "#C5A028","error-container": "#b92902","on-error-container": "#ffd2c8","on-tertiary": "#005b63","on-primary-fixed": "#2D2200","secondary-fixed-dim": "#7aeb9d","on-secondary-fixed-variant": "#006a36","on-tertiary-container": "#005159","error": "#ff7351","surface": "#0e0e0e","surface-container-high": "#201f1f","outline": "#777575","on-tertiary-fixed-variant": "#005c64","on-secondary": "#005f30","on-secondary-container": "#e3ffe5","inverse-surface": "#fcf8f8","on-primary-fixed-variant": "#5E4600","on-background": "#ffffff","surface-variant": "#262626","surface-container-lowest": "#000000","error-dim": "#d53d18","primary": "#D4AF37","tertiary-fixed": "#0eeafd","inverse-primary": "#5E4600","surface-container": "#1a1919","on-surface": "#ffffff"
-        },
-        fontFamily: { "headline": ["Inter","sans-serif"], "body": ["Inter","sans-serif"], "label": ["Space Grotesk","monospace"] },
-        borderRadius: {"DEFAULT":"0px","lg":"0px","xl":"0px","full":"9999px"},
+tailwind.config = {
+  darkMode:"class",
+  theme:{
+    extend:{
+      colors:{
+        /* ── VERDE NEÓN COMO PRIMARIO ── */
+        "primary":         "#00E87A",   /* verde neón principal */
+        "primary-dim":     "#00C462",   /* hover / dark variant */
+        "primary-glow":    "rgba(0,232,122,0.15)",
+        "on-primary":      "#001A0D",   /* texto sobre verde */
+        /* ── DORADO COMO ACENTO (logo / detalles) ── */
+        "gold":            "#D4AF37",
+        "gold-dim":        "#B8961F",
+        /* ── SUPERFICIES OSCURAS ── */
+        "background":           "#080808",
+        "surface":              "#080808",
+        "surface-container":    "#0f0f0f",
+        "surface-container-low":"#0d0d0d",
+        "surface-container-high":"#141414",
+        "surface-container-highest":"#1c1c1c",
+        /* ── TEXTO ── */
+        "on-surface":          "#f0f0f0",
+        "on-surface-variant":  "#888888",
+        /* ── ERROR ── */
+        "error":               "#ff4d4d",
+        /* ── BORDES ── */
+        "outline-variant":     "#2a2a2a",
+        "outline":             "#444",
       },
+      fontFamily:{
+        "headline":["Inter","sans-serif"],
+        "body":    ["Inter","sans-serif"],
+        "label":   ["Space Grotesk","monospace"],
+      },
+      borderRadius:{"DEFAULT":"0px","lg":"0px","xl":"0px","full":"9999px"},
     },
-  }
+  },
+}
 </script>
+
 <style>
-  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; }
-  .hero-gradient { background: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.08) 0%, rgba(14,14,14,0) 70%); }
-  .plan-card { transition: all 0.3s ease; }
-  .plan-card:hover { transform: translateY(-8px); }
-  .custom-scrollbar::-webkit-scrollbar { height:6px; }
-  .custom-scrollbar::-webkit-scrollbar-track { background:#1a1919; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background:#D4AF37; }
+/* ── BASE ── */
+*{box-sizing:border-box;}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle;}
 
-  /* Ticker */
-  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-  .ticker-track { display:flex; width:max-content; animation:ticker 28s linear infinite; }
-  .ticker-track:hover { animation-play-state:paused; }
+/* ── HERO BG ── */
+.hero-gradient{background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,232,122,0.07) 0%, transparent 70%);}
 
-  /* Push notification */
-  @keyframes slideIn  { from{transform:translateX(120%);opacity:0} to{transform:translateX(0);opacity:1} }
-  @keyframes slideOut { from{transform:translateX(0);opacity:1} to{transform:translateX(120%);opacity:0} }
-  @keyframes pulse    { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
-  .notif-enter { animation: slideIn 0.45s cubic-bezier(.22,.68,0,1.2) forwards; }
-  .notif-exit  { animation: slideOut 0.35s ease-in forwards; }
-  .notif-dot   { animation: pulse 1.8s ease-in-out infinite; }
+/* ── PLAN CARD ── */
+.plan-card{transition:transform .3s ease,box-shadow .3s ease;}
+.plan-card:hover{transform:translateY(-6px);}
 
-  /* Form */
-  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-  .form-appear { animation: fadeUp 0.5s ease forwards; }
+/* ── SCROLLBAR ── */
+.custom-scrollbar::-webkit-scrollbar{height:4px;}
+.custom-scrollbar::-webkit-scrollbar-track{background:#0d0d0d;}
+.custom-scrollbar::-webkit-scrollbar-thumb{background:#00E87A;}
 
-  .agx-input {
-    background: #131313;
-    border: 1px solid #494847;
-    color: #fff;
-    padding: 14px 16px;
-    width: 100%;
-    font-family: 'Space Grotesk', monospace;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    transition: border-color 0.2s;
-    outline: none;
-  }
-  .agx-input:focus { border-color: #D4AF37; }
-  .agx-input::placeholder { color: #494847; }
-  .agx-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4AF37' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+/* ── TICKER ── */
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-track{display:flex;width:max-content;animation:ticker 32s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
 
-  /* Plan selector highlight */
-  .plan-opt { cursor:pointer; border:2px solid transparent; transition: all 0.25s; }
-  .plan-opt:hover { border-color: #D4AF3780; }
-  .plan-opt.selected { border-color: #D4AF37; background: #1a1919; }
-  .plan-opt.selected .plan-opt-dot { background: #D4AF37; }
+/* ── NOTIF ── */
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.notif-enter{animation:slideIn .4s cubic-bezier(.22,.68,0,1.2) forwards;}
+.notif-exit{animation:slideOut .3s ease-in forwards;}
+.notif-dot{animation:pulse 1.8s ease-in-out infinite;}
 
-  /* Modal overlay */
-  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(6px); }
-  .modal-box { background:#0e0e0e; border:1px solid #D4AF37; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; }
+/* ── MODAL ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.form-appear{animation:fadeUp .45s ease forwards;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px);}
+.modal-box{background:#080808;border:1px solid #00E87A;max-width:620px;width:100%;max-height:92vh;overflow-y:auto;}
 
-  /* Input with icon */
-  .agx-input-icon-wrap { position: relative; }
-  .agx-input-icon-wrap .agx-input { padding-left: 44px; }
-  .agx-input-icon-wrap .input-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #D4AF37;
-    font-size: 18px;
-    pointer-events: none;
-  }
+/* ── INPUTS ── */
+.agx-input{background:#0d0d0d;border:1px solid #2a2a2a;color:#f0f0f0;padding:14px 16px;width:100%;font-family:'Space Grotesk',monospace;font-size:13px;text-transform:uppercase;letter-spacing:.07em;transition:border-color .2s;outline:none;}
+.agx-input:focus{border-color:#00E87A;}
+.agx-input::placeholder{color:#333;}
+.agx-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300E87A' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;}
+.agx-input-icon-wrap{position:relative;}
+.agx-input-icon-wrap .agx-input{padding-left:44px;}
+.agx-input-icon-wrap .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#00E87A;font-size:18px;pointer-events:none;}
+
+/* ── PLAN SELECTOR ── */
+.plan-opt{cursor:pointer;border:2px solid transparent;transition:all .25s;}
+.plan-opt:hover{border-color:rgba(0,232,122,.4);}
+.plan-opt.selected{border-color:#00E87A;background:#0d1a12;}
+.plan-opt.selected .plan-opt-dot{background:#00E87A;}
+
+/* ── REVIEW CARD ── */
+.review-card{transition:transform .3s ease,border-color .3s;}
+.review-card:hover{transform:translateY(-4px);border-color:rgba(0,232,122,.4)!important;}
+
+/* ── FAQ ── */
+.faq-item{border-bottom:1px solid #1c1c1c;}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;}
+.faq-answer.open{max-height:400px;}
+.faq-icon{transition:transform .3s ease;}
+.faq-icon.open{transform:rotate(45deg);}
+
+/* ── TIMELINE ── */
+.timeline-line{position:absolute;left:23px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#00E87A,rgba(0,232,122,0.05));}
+.timeline-dot{width:48px;height:48px;background:#00E87A;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
+
+/* ── LOGOS TICKER ── */
+@keyframes logoTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.logo-track{display:flex;width:max-content;animation:logoTicker 22s linear infinite;}
+.logo-track:hover{animation-play-state:paused;}
+
+/* ── COMPARE ── */
+.compare-row:nth-child(even){background:rgba(0,232,122,0.02);}
+
+/* ── WHATSAPP ── */
+.wa-float{position:fixed;bottom:20px;left:20px;z-index:9997;}
+@keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.4)}70%{box-shadow:0 0 0 14px rgba(37,211,102,0)}}
+.wa-btn{animation:waPulse 2.5s infinite;}
+
+/* ── VIDEO ── */
+.video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;}
+.video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── GLOW EFFECTS ── */
+.glow-green{box-shadow:0 0 40px rgba(0,232,122,0.15);}
+.glow-text{text-shadow:0 0 40px rgba(0,232,122,0.3);}
+
+/* ── MOBILE NAV ── */
+#mobile-menu{display:none;flex-direction:column;gap:0;background:#080808;border-top:1px solid #1c1c1c;}
+#mobile-menu.open{display:flex;}
+#mobile-menu a{padding:16px 24px;font-family:'Space Grotesk',monospace;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;border-bottom:1px solid #111;transition:color .2s,background .2s;}
+#mobile-menu a:hover{color:#00E87A;background:#0d0d0d;}
+
+/* ── MOBILE OPTIMIZATIONS ── */
+@media(max-width:768px){
+  h1{font-size:2.6rem!important;line-height:.92!important;}
+  .hero-big{font-size:2.6rem!important;}
+  .text-8xl{font-size:3rem!important;}
+  .text-7xl{font-size:2.6rem!important;}
+  .text-6xl{font-size:2.2rem!important;}
+  .text-5xl{font-size:1.9rem!important;}
+  .md\:text-8xl{font-size:2.8rem!important;}
+  .md\:text-7xl{font-size:2.4rem!important;}
+  .md\:scale-110{transform:none!important;}
+  .pt-48{padding-top:7rem!important;}
+  .pb-32{padding-bottom:3rem!important;}
+  .py-40{padding-top:4rem!important;padding-bottom:4rem!important;}
+  .py-32{padding-top:3rem!important;padding-bottom:3rem!important;}
+  .py-24{padding-top:2.5rem!important;padding-bottom:2.5rem!important;}
+  .px-8{padding-left:1.25rem!important;padding-right:1.25rem!important;}
+  .gap-20{gap:2rem!important;}
+  .gap-12{gap:1.5rem!important;}
+  .p-16{padding:1.5rem!important;}
+  .p-12{padding:1.25rem!important;}
+  .p-10{padding:1.1rem!important;}
+  .sticky{position:relative!important;top:auto!important;}
+  .plan-card{transform:none!important;}
+  .timeline-line{left:19px!important;}
+  .timeline-dot{width:40px!important;height:40px!important;}
+  .wa-float{bottom:16px;left:12px;}
+  .wa-btn span{display:none;}
+  .wa-btn{padding:12px!important;border-radius:50%!important;}
+  #notif-container{max-width:260px!important;right:10px!important;bottom:70px!important;}
+}
+
+/* ── GRID FIXES MOBILE ── */
+@media(max-width:640px){
+  .grid-cols-2{grid-template-columns:repeat(2,1fr)!important;}
+  .compare-row{grid-template-columns:1fr 1fr!important;}
+  .compare-row .col-hide{display:none!important;}
+  .compare-header .col-hide{display:none!important;}
+}
 </style>
 </head>
 
 <body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
 
-<!-- ══ PUSH NOTIFICATION CONTAINER ══ -->
-<div id="notif-container" class="fixed bottom-6 right-6 z-[9998] flex flex-col gap-3 items-end pointer-events-none" style="max-width:320px"></div>
+<!-- ══ WHATSAPP ══ -->
+<div class="wa-float">
+  <a href="https://wa.me/TU_NUMERO?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20AGORAX" target="_blank"
+     class="wa-btn flex items-center gap-3 bg-[#25D366] text-white font-label font-bold uppercase text-xs tracking-widest px-5 py-3 shadow-2xl hover:bg-[#1ebe5d] transition-colors"
+     style="border-radius:3px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span>WhatsApp</span>
+  </a>
+</div>
 
-<!-- ══════════ TOP NAV ══════════ -->
-<nav class="fixed top-0 w-full z-50 bg-neutral-950/60 backdrop-blur-xl flex justify-between items-center px-8 py-4 border-b border-white/5">
-  <div class="flex items-center gap-2">
-    <img alt="AGORAX Logo" class="w-auto h-16" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
+<!-- ══ PUSH NOTIFICATIONS ══ -->
+<div id="notif-container" class="fixed bottom-6 right-6 z-[9998] flex flex-col gap-3 items-end pointer-events-none" style="max-width:300px"></div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="fixed top-0 w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/5" style="border-bottom:1px solid #111;">
+  <div class="flex justify-between items-center px-5 md:px-8 py-4 max-w-7xl mx-auto">
+    <div class="flex items-center">
+      <img alt="AGORAX" class="h-12 w-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
+    </div>
+    <!-- Desktop links -->
+    <div class="hidden md:flex gap-6 items-center">
+      <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#proceso">Proceso</a>
+      <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#results">Resultados</a>
+      <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#planes">Planes</a>
+      <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#testimoniales">Testimoniales</a>
+      <a class="font-label font-bold tracking-wide uppercase text-on-surface-variant hover:text-primary transition-colors text-xs" href="#faq">FAQ</a>
+    </div>
+    <!-- Mobile hamburger -->
+    <button class="md:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()" aria-label="Menú">
+      <span id="ham1" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
+      <span id="ham2" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
+      <span id="ham3" class="block w-6 h-0.5 bg-on-surface transition-all duration-300"></span>
+    </button>
   </div>
-  <div class="hidden md:flex gap-8 items-center">
-    <a class="font-label font-bold tracking-tight uppercase text-neutral-400 hover:text-white transition-colors text-sm" href="#process">Process</a>
-    <a class="font-label font-bold tracking-tight uppercase text-neutral-400 hover:text-white transition-colors text-sm" href="#results">Results</a>
-    <a class="font-label font-bold tracking-tight uppercase text-neutral-400 hover:text-white transition-colors text-sm" href="#plans">Plans</a>
-    <a class="font-label font-bold tracking-tight uppercase text-neutral-400 hover:text-white transition-colors text-sm" href="#testimonials">Testimonials</a>
+  <!-- Mobile menu -->
+  <div id="mobile-menu">
+    <a href="#proceso" onclick="toggleMenu()">Proceso</a>
+    <a href="#results" onclick="toggleMenu()">Resultados</a>
+    <a href="#planes" onclick="toggleMenu()">Planes</a>
+    <a href="#testimoniales" onclick="toggleMenu()">Testimoniales</a>
+    <a href="#faq" onclick="toggleMenu()">FAQ</a>
+    <a href="#planes" onclick="toggleMenu()" style="color:#00E87A;border-bottom:none;">→ Comenzar ahora</a>
   </div>
-  <a href="#plans" class="bg-primary text-on-primary font-label font-bold tracking-tight uppercase px-6 py-2.5 scale-95 active:scale-90 transition-transform hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] text-sm">GET STARTED</a>
 </nav>
 
 <!-- ══════════ HERO ══════════ -->
-<header class="relative pt-48 pb-32 px-8 hero-gradient overflow-hidden">
-  <div class="max-w-7xl mx-auto flex flex-col items-start gap-12">
-    <div class="space-y-6 max-w-5xl">
-      <div class="flex items-center gap-4 mb-8">
-        <img alt="AGORAX Logo" class="w-auto h-32" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
-      </div>
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm">Escalado de Alto Rendimiento</span>
-      <h1 class="text-[3.5rem] md:text-[5rem] font-black leading-[0.9] tracking-tighter uppercase italic">
-        Tu e-commerce no necesita <span class="text-primary">más tráfico.</span> Necesita empezar a vender en serio.
+<header class="relative pt-36 md:pt-48 pb-20 md:pb-32 px-5 md:px-8 hero-gradient overflow-hidden">
+  <div class="max-w-7xl mx-auto flex flex-col items-start gap-8 md:gap-12">
+    <div class="space-y-5 max-w-5xl w-full">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm">Escalado de Alto Rendimiento</span>
+      <h1 class="text-[2.6rem] md:text-[5rem] font-black leading-[0.9] tracking-tighter uppercase italic">
+        Tu e-commerce no necesita <span class="text-primary glow-text">más tráfico.</span> Necesita empezar a vender en serio.
       </h1>
-      <p class="text-xl md:text-2xl text-on-surface-variant max-w-3xl leading-relaxed">
+      <p class="text-base md:text-2xl text-on-surface-variant max-w-3xl leading-relaxed">
         Si ya estás vendiendo pero no logras escalar, no es falta de mercado. Es que lo que estás haciendo no está construido para crecer.
       </p>
     </div>
-    <div class="flex flex-col md:flex-row items-start md:items-center gap-8 w-full">
-      <div class="space-y-4">
-        <a href="#plans" class="bg-primary text-on-primary font-black text-xl px-10 py-5 uppercase flex items-center gap-3 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all inline-flex">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 w-full">
+      <div class="space-y-3 w-full sm:w-auto">
+        <a href="#planes" class="bg-primary text-on-primary font-black text-base md:text-xl px-7 md:px-10 py-4 md:py-5 uppercase flex items-center gap-3 hover:shadow-[0_0_30px_rgba(0,232,122,0.35)] transition-all w-full sm:w-auto justify-center sm:justify-start">
           👉 Quiero revisar mi tienda
         </a>
-        <p class="font-label text-xs text-neutral-500 uppercase tracking-widest pl-2">No trabajamos con tiendas en cero.</p>
+        <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest pl-1">No trabajamos con tiendas en cero.</p>
       </div>
-      <div class="bg-surface-container-high p-6 flex flex-col gap-2 border border-primary/20">
-        <span class="font-label text-[10px] text-primary uppercase tracking-widest">Social Proof</span>
-        <p class="font-black text-2xl tracking-tighter italic">ROAS REALES: x12 · x18 · x20</p>
+      <div class="bg-surface-container-high p-4 md:p-6 flex flex-col gap-1 border border-primary/20 w-full sm:w-auto">
+        <span class="font-label text-[9px] text-primary uppercase tracking-widest">Social Proof</span>
+        <p class="font-black text-lg md:text-2xl tracking-tighter italic">ROAS REALES: x12 · x18 · x20</p>
       </div>
     </div>
   </div>
-  <div class="absolute -right-20 top-40 opacity-10 select-none pointer-events-none hidden xl:block">
-    <span class="text-[25rem] font-black leading-none text-primary">AGX</span>
+  <!-- Decorative bg text — hidden mobile -->
+  <div class="absolute -right-16 top-32 opacity-5 select-none pointer-events-none hidden xl:block">
+    <span class="text-[22rem] font-black leading-none text-primary">AGX</span>
   </div>
 </header>
 
 <!-- ══════════ TICKER ══════════ -->
-<div class="bg-primary overflow-hidden py-4 border-y-2 border-primary/60">
+<div class="bg-primary overflow-hidden py-3 md:py-4" style="border-top:2px solid rgba(0,232,122,.4);border-bottom:2px solid rgba(0,232,122,.4);">
   <div class="ticker-track">
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">Resultados Reales. Sin Promesas.</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">+6 Años de Experiencia Real</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">8 Países Trabajados</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">Meta · Google · TikTok Ads</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">No manejamos anuncios. Escalamos lo que vende.</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">Resultados Reales. Sin Promesas.</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">+6 Años de Experiencia Real</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">8 Países Trabajados</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">Meta · Google · TikTok Ads</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
-    <span class="font-label font-black uppercase text-on-primary text-sm tracking-widest whitespace-nowrap px-10">No manejamos anuncios. Escalamos lo que vende.</span>
-    <span class="font-label font-black uppercase text-on-primary/50 text-sm tracking-widest whitespace-nowrap px-4">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Resultados Reales. Sin Promesas.</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">+6 Años de Experiencia Real</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">8 Países Trabajados</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Meta · Google · TikTok Ads</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">No manejamos anuncios. Escalamos lo que vende.</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <!-- duplicate -->
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Resultados Reales. Sin Promesas.</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">+6 Años de Experiencia Real</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">8 Países Trabajados</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">Meta · Google · TikTok Ads</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
+    <span class="font-label font-black uppercase text-on-primary text-xs md:text-sm tracking-widest whitespace-nowrap px-8 md:px-10">No manejamos anuncios. Escalamos lo que vende.</span>
+    <span class="font-label font-black uppercase text-on-primary/40 text-xs tracking-widest whitespace-nowrap px-3">✦</span>
   </div>
 </div>
 
-<!-- ══════════ STATS ══════════ -->
-<section class="py-20 px-8 bg-surface-container-low border-b border-outline-variant/10">
+<!-- ══════════ COUNTERS ══════════ -->
+<section class="py-16 md:py-24 px-5 md:px-8 bg-black border-b border-outline-variant/30" id="counters">
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs">No venimos de la teoría. Venimos de cuentas reales.</span>
+    <div class="text-center mb-10 md:mb-16 reveal">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs">Números que no mienten</span>
+      <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic mt-3">Los resultados hablan solos</h2>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-px bg-outline-variant/20">
-      <div class="bg-surface-container-low p-10 text-center flex flex-col items-center gap-3">
-        <span class="text-5xl font-black text-primary italic">6+</span>
-        <p class="font-label text-[11px] uppercase tracking-widest text-neutral-400 leading-tight">Años en<br/>Growth &amp; Performance</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-px" style="background:rgba(0,232,122,0.08);">
+      <div class="bg-black p-6 md:p-10 text-center flex flex-col items-center gap-3 reveal">
+        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Facturado</span>
+        <div class="flex items-baseline gap-1">
+          <span class="text-primary text-2xl font-black">+</span>
+          <span class="counter-val text-4xl md:text-6xl font-black italic" data-target="258" data-suffix="M">0</span>
+          <span class="text-primary text-xl font-black">USD</span>
+        </div>
       </div>
-      <div class="bg-surface-container-low p-10 text-center flex flex-col items-center gap-3">
-        <span class="text-5xl font-black text-primary italic">8</span>
-        <p class="font-label text-[11px] uppercase tracking-widest text-neutral-400 leading-tight">Países<br/>Trabajados</p>
+      <div class="bg-black p-6 md:p-10 text-center flex flex-col items-center gap-3 reveal">
+        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">ROAS Promedio</span>
+        <div class="flex items-baseline gap-1">
+          <span class="text-primary text-2xl font-black">x</span>
+          <span class="counter-val text-4xl md:text-6xl font-black italic" data-target="65" data-suffix="">0</span>
+        </div>
       </div>
-      <div class="bg-surface-container-low p-10 text-center flex flex-col items-center gap-3">
-        <span class="text-5xl font-black text-primary italic">x65</span>
-        <p class="font-label text-[11px] uppercase tracking-widest text-neutral-400 leading-tight">ROAS Promedio<br/>Global</p>
+      <div class="bg-black p-6 md:p-10 text-center flex flex-col items-center gap-3 reveal">
+        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Años de Exp.</span>
+        <div class="flex items-baseline gap-1">
+          <span class="counter-val text-4xl md:text-6xl font-black italic" data-target="6" data-suffix="+">0</span>
+        </div>
       </div>
-      <div class="bg-surface-container-low p-10 text-center flex flex-col items-center gap-3">
-        <span class="text-5xl font-black text-primary italic">+258M</span>
-        <p class="font-label text-[11px] uppercase tracking-widest text-neutral-400 leading-tight">Facturados con<br/>Nuestros Sistemas</p>
-      </div>
-      <div class="col-span-2 md:col-span-1 bg-primary p-10 text-center flex flex-col items-center justify-center gap-3">
-        <span class="text-5xl font-black text-on-primary italic">3</span>
-        <p class="font-label text-[11px] uppercase tracking-widest text-on-primary/70 leading-tight">Plataformas:<br/>Meta · Google · TikTok</p>
+      <div class="p-6 md:p-10 text-center flex flex-col items-center gap-3 reveal" style="background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.2);">
+        <span class="font-label text-[10px] uppercase tracking-widest text-primary mb-1">Países</span>
+        <div class="flex items-baseline gap-1">
+          <span class="counter-val text-4xl md:text-6xl font-black italic text-primary" data-target="8" data-suffix="">0</span>
+        </div>
       </div>
     </div>
-    <p class="text-center font-label text-xs text-neutral-600 uppercase tracking-widest mt-6">Criterio construido sobre cuentas reales, no sobre discurso.</p>
+  </div>
+</section>
+
+<!-- ══════════ LOGOS ══════════ -->
+<section class="py-10 md:py-16 px-5 md:px-8 bg-surface-container-low border-b border-outline-variant/20">
+  <div class="max-w-7xl mx-auto">
+    <p class="text-center font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-8">Marcas que han confiado en el sistema</p>
+    <div class="overflow-hidden">
+      <div class="logo-track">
+        <div class="flex items-center">
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">UrbanTech</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">GlowSkin</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">FitBrands</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">NovaModa</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">EcoStore</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">PrimeMX</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">VidaFit</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">DropElite</p></div>
+        </div>
+        <div class="flex items-center">
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">UrbanTech</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">GlowSkin</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">FitBrands</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">NovaModa</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">EcoStore</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">PrimeMX</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">VidaFit</p></div>
+          <div class="px-10 py-5 border-r border-outline-variant/20 flex items-center justify-center" style="min-width:160px"><p class="font-black uppercase text-xl tracking-tighter text-on-surface-variant hover:text-primary transition-colors cursor-default">DropElite</p></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-center font-label text-[9px] uppercase tracking-widest text-on-surface-variant/30 mt-5">* Nombres de referencia. Información de clientes protegida por NDA.</p>
+  </div>
+</section>
+
+<!-- ══════════ STATS ══════════ -->
+<section class="py-14 md:py-20 px-5 md:px-8 bg-surface-container-low border-b border-outline-variant/20">
+  <div class="max-w-7xl mx-auto">
+    <p class="text-center font-label text-primary uppercase tracking-[0.3em] text-xs mb-10">No venimos de la teoría. Venimos de cuentas reales.</p>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-px" style="background:#111;">
+      <div class="bg-surface-container-low p-6 md:p-10 text-center flex flex-col items-center gap-2"><span class="text-4xl md:text-5xl font-black text-primary italic">6+</span><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant leading-tight">Años Growth<br/>&amp; Performance</p></div>
+      <div class="bg-surface-container-low p-6 md:p-10 text-center flex flex-col items-center gap-2"><span class="text-4xl md:text-5xl font-black text-primary italic">8</span><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant leading-tight">Países<br/>Trabajados</p></div>
+      <div class="bg-surface-container-low p-6 md:p-10 text-center flex flex-col items-center gap-2"><span class="text-4xl md:text-5xl font-black text-primary italic">x65</span><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant leading-tight">ROAS Promedio<br/>Global</p></div>
+      <div class="bg-surface-container-low p-6 md:p-10 text-center flex flex-col items-center gap-2"><span class="text-4xl md:text-5xl font-black text-primary italic">+258M</span><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant leading-tight">USD<br/>Facturados</p></div>
+      <div class="col-span-2 md:col-span-1 p-6 md:p-10 text-center flex flex-col items-center justify-center gap-2" style="background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.2);"><span class="text-4xl md:text-5xl font-black text-primary italic">3</span><p class="font-label text-[10px] uppercase tracking-widest text-primary leading-tight">Meta · Google<br/>· TikTok</p></div>
+    </div>
+    <p class="text-center font-label text-[10px] text-on-surface-variant/40 uppercase tracking-widest mt-5">Criterio construido sobre cuentas reales, no sobre discurso.</p>
   </div>
 </section>
 
 <!-- ══════════ IDENTIFICATION ══════════ -->
-<section class="py-32 px-8 bg-surface-container-low">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-start">
-    <div class="sticky top-32">
-      <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-8">
-        Si esto te está <span class="text-primary">pasando,</span> no eres el único.
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-20 items-start">
+    <div class="md:sticky md:top-32">
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-6">
+        Si esto te está <span class="text-primary">pasando,</span><br/>no eres el único.
       </h2>
-      <div class="h-1 w-24 bg-primary"></div>
+      <div class="h-1 w-16 md:w-24 bg-primary"></div>
     </div>
-    <div class="space-y-12">
-      <div class="space-y-8">
-        <div class="flex items-center gap-6 group"><span class="font-label text-primary text-2xl">01</span><p class="text-2xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Estás vendiendo… pero no creces</p></div>
-        <div class="flex items-center gap-6 group"><span class="font-label text-primary text-2xl">02</span><p class="text-2xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Subes presupuesto… y todo se rompe</p></div>
-        <div class="flex items-center gap-6 group"><span class="font-label text-primary text-2xl">03</span><p class="text-2xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Un mes te va bien… y el siguiente no</p></div>
-        <div class="flex items-center gap-6 group"><span class="font-label text-primary text-2xl">04</span><p class="text-2xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">No sabes qué anuncio escalar</p></div>
-        <div class="flex items-center gap-6 group"><span class="font-label text-primary text-2xl">05</span><p class="text-2xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Sientes que dependes de la suerte</p></div>
+    <div class="space-y-8 md:space-y-12">
+      <div class="space-y-6">
+        <div class="flex items-center gap-5 group"><span class="font-label text-primary text-xl">01</span><p class="text-xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Estás vendiendo… pero no creces</p></div>
+        <div class="flex items-center gap-5 group"><span class="font-label text-primary text-xl">02</span><p class="text-xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Subes presupuesto… y todo se rompe</p></div>
+        <div class="flex items-center gap-5 group"><span class="font-label text-primary text-xl">03</span><p class="text-xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Un mes te va bien… y el siguiente no</p></div>
+        <div class="flex items-center gap-5 group"><span class="font-label text-primary text-xl">04</span><p class="text-xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">No sabes qué anuncio escalar</p></div>
+        <div class="flex items-center gap-5 group"><span class="font-label text-primary text-xl">05</span><p class="text-xl md:text-3xl font-bold text-on-surface-variant group-hover:text-white transition-colors">Sientes que dependes de la suerte</p></div>
       </div>
-      <div class="pt-8 border-t border-outline-variant/20">
-        <p class="text-3xl font-black italic uppercase tracking-tighter">"No es tu producto. Es cómo estás intentando crecer."</p>
+      <div class="pt-6 border-t border-outline-variant/20">
+        <p class="text-xl md:text-3xl font-black italic uppercase tracking-tighter">"No es tu producto. Es cómo estás intentando crecer."</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════ BREAKING BELIEFS ══════════ -->
-<section class="py-40 px-8 bg-surface">
-  <div class="max-w-5xl mx-auto text-center space-y-16">
-    <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter italic leading-none">Escalar no es <br/><span class="text-primary">gastar más</span></h2>
-    <div class="grid md:grid-cols-2 gap-12 text-left items-center">
-      <p class="text-xl md:text-2xl leading-relaxed text-on-surface-variant">La mayoría de e-commerce se queda estancado por una razón simple: están comprando tráfico… sin tener algo sólido que escalar.</p>
-      <div class="bg-primary p-12 text-on-primary">
-        <p class="text-3xl font-black uppercase tracking-tighter leading-tight italic">Más presupuesto sin estructura solo acelera errores.</p>
+<section class="py-24 md:py-40 px-5 md:px-8 bg-surface">
+  <div class="max-w-5xl mx-auto text-center space-y-10 md:space-y-16">
+    <h2 class="text-4xl md:text-8xl font-black uppercase tracking-tighter italic leading-none">Escalar no es <br/><span class="text-primary">gastar más</span></h2>
+    <div class="grid md:grid-cols-2 gap-8 md:gap-12 text-left items-center">
+      <p class="text-lg md:text-2xl leading-relaxed text-on-surface-variant">La mayoría de e-commerce se queda estancado por una razón simple: están comprando tráfico… sin tener algo sólido que escalar.</p>
+      <div class="bg-primary p-8 md:p-12 text-on-primary">
+        <p class="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-tight italic">Más presupuesto sin estructura solo acelera errores.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════ PROOF GALLERY ══════════ -->
-<section class="py-32 px-8 bg-surface-container-low" id="results">
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low" id="results">
   <div class="max-w-7xl mx-auto">
-    <div class="mb-20">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4 block">Estructura &amp; Datos Reales</span>
-      <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic">Esto es lo que pasa cuando hay estructura</h2>
-      <p class="text-on-surface-variant mt-4 text-lg max-w-2xl">No mostramos teoría. Mostramos cuentas reales.</p>
+    <div class="mb-12 md:mb-20">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Estructura &amp; Datos Reales</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">Esto es lo que pasa<br/>cuando hay estructura</h2>
+      <p class="text-on-surface-variant mt-3 text-base md:text-lg max-w-2xl">No mostramos teoría. Mostramos cuentas reales.</p>
     </div>
-    <div class="flex flex-col gap-12">
-      <div class="overflow-x-auto custom-scrollbar pb-8 flex gap-6 snap-x snap-mandatory">
-        <div class="flex-none w-[90vw] md:w-[800px] snap-center">
-          <div class="bg-surface-container-highest border border-primary/20 p-2 shadow-2xl">
-            <img alt="Ads Manager Result 1" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ugR4Q-ELvsDzQ4Q9_u1feOn45aFltmQ3XO_5-8hp9UUb0CiRshNuvwsrOk4gRRiLfOF4QAsBWzqzALd5mOBKBkrNYS8F2pPFGmdAw1YJZvj-R-4-UZ-39zaxZI8RnFs8pIo-y1nkKIDmbWUQJZfgf1IZ8FDRW9B1PiL7WzBaojBMXQTmbh76TBhKnfHNtbaI8x4wWMG2IxJU4Gidyg950lAUcDfHMETplV-D02XOPQqkUdrkl0W05nocXCCeWq7gBjPnNwbyWhGUQ"/>
-            <div class="p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study A: Escalado Vertical</span><p class="text-xl font-black italic uppercase mt-1">ROAS 168.29</p><p class="text-sm text-neutral-400 mt-1 font-label">De campañas inestables a una estructura con escalado más claro</p></div>
+    <div class="flex flex-col gap-8 md:gap-12">
+      <div class="overflow-x-auto custom-scrollbar pb-6 flex gap-4 md:gap-6 snap-x snap-mandatory">
+        <div class="flex-none w-[88vw] md:w-[800px] snap-center">
+          <div class="bg-surface-container-highest border border-primary/20 p-1.5 shadow-2xl glow-green">
+            <img alt="Result A" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ugR4Q-ELvsDzQ4Q9_u1feOn45aFltmQ3XO_5-8hp9UUb0CiRshNuvwsrOk4gRRiLfOF4QAsBWzqzALd5mOBKBkrNYS8F2pPFGmdAw1YJZvj-R-4-UZ-39zaxZI8RnFs8pIo-y1nkKIDmbWUQJZfgf1IZ8FDRW9B1PiL7WzBaojBMXQTmbh76TBhKnfHNtbaI8x4wWMG2IxJU4Gidyg950lAUcDfHMETplV-D02XOPQqkUdrkl0W05nocXCCeWq7gBjPnNwbyWhGUQ"/>
+            <div class="p-4 md:p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study A</span><p class="text-lg md:text-xl font-black italic uppercase mt-1">ROAS 168.29</p><p class="text-xs md:text-sm text-on-surface-variant mt-1 font-label">De campañas inestables a estructura clara</p></div>
           </div>
         </div>
-        <div class="flex-none w-[90vw] md:w-[800px] snap-center">
-          <div class="bg-surface-container-highest border border-primary/20 p-2 shadow-2xl">
-            <img alt="Ads Manager Result 2" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uiipz847BaVlQqvpVMOT4ArWsX40eVIrVFJmuby8wxP1C16K4cUDxOqoZDbMR9ygN8sIqZe-G1dQ6NtNE7VG_uaN-j2c_aOCw8PKlxt3HLfbubaje8qn-OeaMpZgbkV5EzvgSRx5yNBFvJ5t1uP0TRQQ8zd2ZkbVJW7aHC4ZviKVfkWrxMns41X7DRA2sEQcT7R3gBUd6WY6WaILUmndm72mi6XZ83v2NuWiwD0gA1uFoehHDVp4ipJr7YW8Ry3MZvrZjoshFLxXaQ"/>
-            <div class="p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study B: Optimización de Pauta</span><p class="text-xl font-black italic uppercase mt-1">Iteración de Ángulos Ganadores</p><p class="text-sm text-neutral-400 mt-1 font-label">De depender de una creatividad a construir un sistema</p></div>
+        <div class="flex-none w-[88vw] md:w-[800px] snap-center">
+          <div class="bg-surface-container-highest border border-primary/20 p-1.5 shadow-2xl">
+            <img alt="Result B" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uiipz847BaVlQqvpVMOT4ArWsX40eVIrVFJmuby8wxP1C16K4cUDxOqoZDbMR9ygN8sIqZe-G1dQ6NtNE7VG_uaN-j2c_aOCw8PKlxt3HLfbubaje8qn-OeaMpZgbkV5EzvgSRx5yNBFvJ5t1uP0TRQQ8zd2ZkbVJW7aHC4ZviKVfkWrxMns41X7DRA2sEQcT7R3gBUd6WY6WaILUmndm72mi6XZ83v2NuWiwD0gA1uFoehHDVp4ipJr7YW8Ry3MZvrZjoshFLxXaQ"/>
+            <div class="p-4 md:p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study B</span><p class="text-lg md:text-xl font-black italic uppercase mt-1">Ángulos Ganadores</p><p class="text-xs md:text-sm text-on-surface-variant mt-1 font-label">De una creatividad a un sistema</p></div>
           </div>
         </div>
-        <div class="flex-none w-[90vw] md:w-[800px] snap-center">
-          <div class="bg-surface-container-highest border border-primary/20 p-2 shadow-2xl">
-            <img alt="Ads Manager Result 3" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uhgZ8z0Dw3New9yoWAPHzghDVCXtQPC5y9tQlAr7Dpik2cPU2deGbcXfjVKbw7tjco79SXLjhrKhx71Ju4DC8xHVGgD6NOqZb-ZJ-16jZXXRkhSPDmQ3ssj8lg2nU4ABjyEd-Bgfw3eyyUXyws6gcJ1uj2Mz9NJEr6x9m9finlVPEYffMM3sAyf4YBA6kQoIACLPn5SqJpehs0ybRXeRnommEQyiPOvMhYNBM0f5gHM5vSUNN3JUhHg5ZG_AnugJtVe5_MbtL4waJA"/>
-            <div class="p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study C: Volumen Masivo</span><p class="text-xl font-black italic uppercase mt-1">Sistemas de Facturación Constante</p><p class="text-sm text-neutral-400 mt-1 font-label">Escalado sostenido mes a mes, sin depender del orgánico</p></div>
+        <div class="flex-none w-[88vw] md:w-[800px] snap-center">
+          <div class="bg-surface-container-highest border border-primary/20 p-1.5 shadow-2xl">
+            <img alt="Result C" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uhgZ8z0Dw3New9yoWAPHzghDVCXtQPC5y9tQlAr7Dpik2cPU2deGbcXfjVKbw7tjco79SXLjhrKhx71Ju4DC8xHVGgD6NOqZb-ZJ-16jZXXRkhSPDmQ3ssj8lg2nU4ABjyEd-Bgfw3eyyUXyws6gcJ1uj2Mz9NJEr6x9m9finlVPEYffMM3sAyf4YBA6kQoIACLPn5SqJpehs0ybRXeRnommEQyiPOvMhYNBM0f5gHM5vSUNN3JUhHg5ZG_AnugJtVe5_MbtL4waJA"/>
+            <div class="p-4 md:p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study C</span><p class="text-lg md:text-xl font-black italic uppercase mt-1">Facturación Constante</p><p class="text-xs md:text-sm text-on-surface-variant mt-1 font-label">Escalado sostenido sin depender del orgánico</p></div>
           </div>
         </div>
-        <div class="flex-none w-[90vw] md:w-[800px] snap-center">
-          <div class="bg-surface-container-highest border border-primary/20 p-2 shadow-2xl">
-            <img alt="Ads Manager Result 4" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ug6K0-BdhLlO8UAOmhvJnmMDHIGf4Jq0xaEHNgOJv6z6vPosUbnd0wJutnLuv_o-RktkJUBGmpJVLjXGWBBFnOhWL2LoxYLfnC9nBBfLpuDdqBF3z-VbA_5KloXUlRUfg1qe8Qg3NIP8FJOWzCudVl7DgcwUQGbIJ2WfOoUp_xQP0PZBi0tgFtj1piAgEWyeGAHnzVWzsFGTBe5ujJXTqxGAY3UIr3xT__DEhZQjEDG_CQlZyOpgznd7U73iJVbyTuxzQB4-nZt5w"/>
-            <div class="p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study D: Performance Extrema</span><p class="text-xl font-black italic uppercase mt-1">+258M Facturados · ROAS Promedio 39.24</p><p class="text-sm text-neutral-400 mt-1 font-label">Decisiones tomadas sobre datos, no sobre intuición</p></div>
+        <div class="flex-none w-[88vw] md:w-[800px] snap-center">
+          <div class="bg-surface-container-highest border border-primary/20 p-1.5 shadow-2xl">
+            <img alt="Result D" class="w-full h-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ug6K0-BdhLlO8UAOmhvJnmMDHIGf4Jq0xaEHNgOJv6z6vPosUbnd0wJutnLuv_o-RktkJUBGmpJVLjXGWBBFnOhWL2LoxYLfnC9nBBfLpuDdqBF3z-VbA_5KloXUlRUfg1qe8Qg3NIP8FJOWzCudVl7DgcwUQGbIJ2WfOoUp_xQP0PZBi0tgFtj1piAgEWyeGAHnzVWzsFGTBe5ujJXTqxGAY3UIr3xT__DEhZQjEDG_CQlZyOpgznd7U73iJVbyTuxzQB4-nZt5w"/>
+            <div class="p-4 md:p-6 bg-black"><span class="font-label text-primary text-xs uppercase tracking-widest">Case Study D</span><p class="text-lg md:text-xl font-black italic uppercase mt-1">+258M · ROAS 39.24</p><p class="text-xs md:text-sm text-on-surface-variant mt-1 font-label">Decisiones sobre datos, no intuición</p></div>
           </div>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-primary p-12 flex flex-col justify-center text-on-primary">
-          <span class="text-6xl font-black italic tracking-tighter">x65.94</span>
-          <p class="font-label uppercase font-bold text-lg mt-4">ROAS PROMEDIO GLOBAL</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div class="bg-primary p-8 md:p-12 flex flex-col justify-center text-on-primary">
+          <span class="text-5xl md:text-6xl font-black italic tracking-tighter">x65.94</span>
+          <p class="font-label uppercase font-bold text-base md:text-lg mt-3">ROAS PROMEDIO GLOBAL</p>
         </div>
-        <div class="bg-surface-container-high p-10 border-l-4 border-primary flex items-center">
-          <p class="text-2xl font-bold text-on-surface leading-tight italic">"No es suerte. Es lo que pasa cuando se encuentra qué vende realmente y se le inyecta sistema."</p>
+        <div class="bg-surface-container-high p-7 md:p-10 border-l-4 border-primary flex items-center">
+          <p class="text-xl md:text-2xl font-bold leading-tight italic">"No es suerte. Es lo que pasa cuando se encuentra qué vende y se le inyecta sistema."</p>
         </div>
-        <div class="bg-surface-container-highest p-10 flex flex-col justify-center">
+        <div class="bg-surface-container-highest p-7 md:p-10 flex flex-col justify-center">
           <div class="grid grid-cols-3 gap-4 text-center">
-            <div><span class="block text-3xl font-black text-primary">82%</span><span class="font-label text-[10px] uppercase">Conv. Up</span></div>
-            <div><span class="block text-3xl font-black text-primary">-45%</span><span class="font-label text-[10px] uppercase">CPA Down</span></div>
-            <div><span class="block text-3xl font-black text-primary">x3.2</span><span class="font-label text-[10px] uppercase">Revenue</span></div>
+            <div><span class="block text-2xl md:text-3xl font-black text-primary">82%</span><span class="font-label text-[9px] uppercase">Conv. Up</span></div>
+            <div><span class="block text-2xl md:text-3xl font-black text-primary">-45%</span><span class="font-label text-[9px] uppercase">CPA Down</span></div>
+            <div><span class="block text-2xl md:text-3xl font-black text-primary">x3.2</span><span class="font-label text-[9px] uppercase">Revenue</span></div>
           </div>
         </div>
       </div>
@@ -291,143 +470,221 @@
   </div>
 </section>
 
-<!-- ══════════ SOLUTION ══════════ -->
-<section class="py-32 px-8 bg-surface" id="process">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-20">
-    <div class="md:w-1/3">
-      <h2 class="text-5xl font-black uppercase tracking-tighter leading-none sticky top-32">Aquí es donde entra <br/><span class="text-primary">Agorax</span></h2>
+<!-- ══════════ VIDEO ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-black">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10 md:mb-16 reveal">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Míralo en acción</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">Así trabajamos <span class="text-primary">por dentro</span></h2>
     </div>
-    <div class="md:w-2/3 space-y-24">
-      <div class="grid md:grid-cols-2 gap-12">
-        <div class="space-y-6"><div class="w-12 h-12 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">search</span></div><h4 class="text-2xl font-bold uppercase">Detección de Ángulos</h4><p class="text-on-surface-variant leading-relaxed">Detectamos qué producto o ángulo sí responde al mercado actual antes de quemar presupuesto.</p></div>
-        <div class="space-y-6"><div class="w-12 h-12 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">bolt</span></div><h4 class="text-2xl font-bold uppercase">Iteración Veloz</h4><p class="text-on-surface-variant leading-relaxed">Probamos rápido hasta encontrar lo que convierte. No esperamos a la suerte, la forzamos.</p></div>
-        <div class="space-y-6"><div class="w-12 h-12 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">trending_up</span></div><h4 class="text-2xl font-bold uppercase">Escalado Vertical</h4><p class="text-on-surface-variant leading-relaxed">Escalamos lo que funciona con precisión quirúrgica, protegiendo siempre tus márgenes.</p></div>
-        <div class="space-y-6"><div class="w-12 h-12 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">content_cut</span></div><h4 class="text-2xl font-bold uppercase">Optimización Letal</h4><p class="text-on-surface-variant leading-relaxed">Cortamos lo que no sirve de inmediato. No nos enamoramos de creativos que no traen dinero.</p></div>
+    <div class="border border-primary/30 p-1.5 shadow-[0_0_50px_rgba(0,232,122,0.12)] reveal">
+      <div class="video-wrapper bg-surface-container-highest">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="AGORAX" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <div class="bg-surface-container-highest p-12 text-center border-l-8 border-primary">
-        <p class="text-3xl font-black italic uppercase tracking-tighter">"No manejamos anuncios. Encontramos qué vende y lo escalamos."</p>
+    </div>
+    <div class="mt-6 grid grid-cols-3 gap-4 text-center">
+      <div><span class="block font-black text-lg md:text-2xl text-primary">8 min</span><span class="font-label text-[10px] uppercase text-on-surface-variant">Duración</span></div>
+      <div><span class="block font-black text-lg md:text-2xl text-primary">Sin humo</span><span class="font-label text-[10px] uppercase text-on-surface-variant">Solo estrategia</span></div>
+      <div><span class="block font-black text-lg md:text-2xl text-primary">Casos reales</span><span class="font-label text-[10px] uppercase text-on-surface-variant">Cuentas activas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SOLUTION ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="proceso">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 md:gap-20">
+    <div class="md:w-1/3">
+      <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none md:sticky md:top-32">Aquí es donde entra <br/><span class="text-primary">Agorax</span></h2>
+    </div>
+    <div class="md:w-2/3 space-y-12 md:space-y-24">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
+        <div class="space-y-4"><div class="w-11 h-11 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">search</span></div><h4 class="text-xl font-bold uppercase">Detección de Ángulos</h4><p class="text-on-surface-variant text-sm leading-relaxed">Detectamos qué producto o ángulo responde al mercado actual antes de quemar presupuesto.</p></div>
+        <div class="space-y-4"><div class="w-11 h-11 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">bolt</span></div><h4 class="text-xl font-bold uppercase">Iteración Veloz</h4><p class="text-on-surface-variant text-sm leading-relaxed">Probamos rápido hasta encontrar lo que convierte. No esperamos a la suerte, la forzamos.</p></div>
+        <div class="space-y-4"><div class="w-11 h-11 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">trending_up</span></div><h4 class="text-xl font-bold uppercase">Escalado Vertical</h4><p class="text-on-surface-variant text-sm leading-relaxed">Escalamos lo que funciona con precisión quirúrgica, protegiendo siempre tus márgenes.</p></div>
+        <div class="space-y-4"><div class="w-11 h-11 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary">content_cut</span></div><h4 class="text-xl font-bold uppercase">Optimización Letal</h4><p class="text-on-surface-variant text-sm leading-relaxed">Cortamos lo que no sirve de inmediato. No nos enamoramos de creativos que no traen dinero.</p></div>
+      </div>
+      <div class="bg-surface-container-highest p-8 md:p-12 text-center border-l-8 border-primary">
+        <p class="text-xl md:text-3xl font-black italic uppercase tracking-tighter">"No manejamos anuncios. Encontramos qué vende y lo escalamos."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TIMELINE ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-14 md:mb-20 reveal">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Paso a paso</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">Así funciona el <span class="text-primary">proceso</span></h2>
+    </div>
+    <div class="relative pl-14 md:pl-16">
+      <div class="timeline-line"></div>
+      <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-16 reveal">
+        <div class="timeline-dot absolute -left-0 top-0"><span class="font-black text-on-primary text-base md:text-lg">01</span></div>
+        <div class="bg-surface-container-highest border border-primary/20 p-6 md:p-8 flex-1 hover:border-primary/50 transition-colors">
+          <div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-primary text-2xl">search</span><h3 class="text-lg md:text-xl font-black uppercase">Diagnóstico Inicial</h3></div>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Revisamos tu cuenta, oferta y métricas reales. Identificamos el problema antes de tocar un peso.</p>
+          <span class="font-label text-[10px] uppercase text-primary tracking-widest mt-3 block">Semana 1 · 45 min</span>
+        </div>
+      </div>
+      <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-16 reveal">
+        <div class="timeline-dot absolute -left-0 top-0"><span class="font-black text-on-primary text-base md:text-lg">02</span></div>
+        <div class="bg-surface-container-highest border border-primary/20 p-6 md:p-8 flex-1 hover:border-primary/50 transition-colors">
+          <div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-primary text-2xl">architecture</span><h3 class="text-lg md:text-xl font-black uppercase">Construcción de Estructura</h3></div>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Diseñamos la arquitectura de campañas, ángulos de prueba y creativos de performance.</p>
+          <span class="font-label text-[10px] uppercase text-primary tracking-widest mt-3 block">Semana 1–2 · Setup completo</span>
+        </div>
+      </div>
+      <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-16 reveal">
+        <div class="timeline-dot absolute -left-0 top-0"><span class="font-black text-on-primary text-base md:text-lg">03</span></div>
+        <div class="bg-surface-container-highest border border-primary/20 p-6 md:p-8 flex-1 hover:border-primary/50 transition-colors">
+          <div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><h3 class="text-lg md:text-xl font-black uppercase">Iteración Acelerada</h3></div>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Lanzamos, medimos y ajustamos. Cortamos lo que no convierte y potenciamos lo que sí.</p>
+          <span class="font-label text-[10px] uppercase text-primary tracking-widest mt-3 block">Semana 2–4 · Testing activo</span>
+        </div>
+      </div>
+      <div class="relative flex gap-6 md:gap-8 mb-10 md:mb-16 reveal">
+        <div class="timeline-dot absolute -left-0 top-0"><span class="font-black text-on-primary text-base md:text-lg">04</span></div>
+        <div class="bg-surface-container-highest border border-primary/20 p-6 md:p-8 flex-1 hover:border-primary/50 transition-colors">
+          <div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-primary text-2xl">trending_up</span><h3 class="text-lg md:text-xl font-black uppercase">Escalado Controlado</h3></div>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Escalamos con precisión. Protegemos el ROAS mientras aumentamos el volumen de inversión.</p>
+          <span class="font-label text-[10px] uppercase text-primary tracking-widest mt-3 block">Mes 2+ · Crecimiento real</span>
+        </div>
+      </div>
+      <div class="relative flex gap-6 md:gap-8 reveal">
+        <div class="timeline-dot absolute -left-0 top-0" style="background:#0d1a12;border:2px solid #00E87A;"><span class="font-black text-primary text-base md:text-lg">05</span></div>
+        <div class="bg-primary p-6 md:p-8 flex-1">
+          <div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-on-primary text-2xl">auto_graph</span><h3 class="text-lg md:text-xl font-black uppercase text-on-primary">Sistema Autónomo</h3></div>
+          <p class="text-on-primary/80 text-sm leading-relaxed font-bold">Tu tienda deja de depender de la suerte. Tienes un sistema que genera ventas predecibles y escalables.</p>
+          <span class="font-label text-[10px] uppercase text-on-primary/60 tracking-widest mt-3 block">Objetivo final</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════ DIFFERENTIATION ══════════ -->
-<section class="py-32 px-8 bg-primary text-on-primary">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
-    <div class="md:w-1/2"><h2 class="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] italic">No somos más creativos… <br/> somos más <span class="underline">rápidos.</span></h2></div>
-    <div class="md:w-1/2"><p class="text-2xl md:text-3xl font-bold leading-tight uppercase tracking-tight">Mientras otros tardan semanas en probar ideas… nosotros iteramos constantemente hasta encontrar lo que funciona.</p></div>
+<section class="py-20 md:py-32 px-5 md:px-8 bg-primary text-on-primary">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+    <div class="md:w-1/2"><h2 class="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] italic">No somos más creativos… <br/> somos más <span class="underline">rápidos.</span></h2></div>
+    <div class="md:w-1/2"><p class="text-xl md:text-3xl font-bold leading-tight uppercase tracking-tight">Mientras otros tardan semanas en probar ideas… nosotros iteramos hasta encontrar lo que funciona.</p></div>
   </div>
 </section>
 
-<!-- ══════════ EXPERIENCIA INTERNACIONAL ══════════ -->
-<section class="py-32 px-8 bg-surface-container-low" id="experience">
+<!-- ══════════ COMPARATIVA ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14 md:mb-20 reveal">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">¿Por qué AGORAX?</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">AGORAX vs <span class="text-primary">Agencia Tradicional</span></h2>
+    </div>
+    <div class="border border-primary/20 overflow-hidden reveal">
+      <div class="grid grid-cols-3 bg-surface-container-highest compare-header">
+        <div class="p-4 md:p-6 border-r border-outline-variant/20"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Criterio</p></div>
+        <div class="p-4 md:p-6 border-r border-outline-variant/20 text-center" style="background:rgba(0,232,122,0.08);"><p class="font-black uppercase text-primary tracking-widest text-xs md:text-sm">AGORAX</p></div>
+        <div class="p-4 md:p-6 text-center"><p class="font-black uppercase text-on-surface-variant tracking-widest text-xs md:text-sm">Tradicional</p></div>
+      </div>
+      <div class="compare-row grid grid-cols-3 border-t border-outline-variant/10"><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Enfoque</p></div><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center gap-2" style="background:rgba(0,232,122,0.04);"><span class="material-symbols-outlined text-primary text-base">check</span><p class="font-bold text-xs md:text-sm">Resultados y escalado</p></div><div class="p-4 md:p-6 flex items-center gap-2"><span class="material-symbols-outlined text-error text-base">close</span><p class="font-bold text-xs text-on-surface-variant">Manejo de anuncios</p></div></div>
+      <div class="compare-row grid grid-cols-3 border-t border-outline-variant/10"><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Velocidad</p></div><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center gap-2" style="background:rgba(0,232,122,0.04);"><span class="material-symbols-outlined text-primary text-base">check</span><p class="font-bold text-xs md:text-sm">Días</p></div><div class="p-4 md:p-6 flex items-center gap-2"><span class="material-symbols-outlined text-error text-base">close</span><p class="font-bold text-xs text-on-surface-variant">Semanas o meses</p></div></div>
+      <div class="compare-row grid grid-cols-3 border-t border-outline-variant/10"><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Decisiones</p></div><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center gap-2" style="background:rgba(0,232,122,0.04);"><span class="material-symbols-outlined text-primary text-base">check</span><p class="font-bold text-xs md:text-sm">Datos reales</p></div><div class="p-4 md:p-6 flex items-center gap-2"><span class="material-symbols-outlined text-error text-base">close</span><p class="font-bold text-xs text-on-surface-variant">Opiniones</p></div></div>
+      <div class="compare-row grid grid-cols-3 border-t border-outline-variant/10"><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Modelo</p></div><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center gap-2" style="background:rgba(0,232,122,0.04);"><span class="material-symbols-outlined text-primary text-base">check</span><p class="font-bold text-xs md:text-sm">Especializado</p></div><div class="p-4 md:p-6 flex items-center gap-2"><span class="material-symbols-outlined text-error text-base">close</span><p class="font-bold text-xs text-on-surface-variant">Cliente #47 de 200</p></div></div>
+      <div class="compare-row grid grid-cols-3 border-t border-outline-variant/10"><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center"><p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Experiencia</p></div><div class="p-4 md:p-6 border-r border-outline-variant/20 flex items-center gap-2" style="background:rgba(0,232,122,0.04);"><span class="material-symbols-outlined text-primary text-base">check</span><p class="font-bold text-xs md:text-sm">+6 años · 8 países</p></div><div class="p-4 md:p-6 flex items-center gap-2"><span class="material-symbols-outlined text-error text-base">close</span><p class="font-bold text-xs text-on-surface-variant">Variable</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ INTERNACIONAL ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low">
   <div class="max-w-7xl mx-auto">
-    <div class="mb-16">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4 block">Presencia Internacional</span>
-      <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">Performance adaptado<br/>a cada mercado</h2>
-      <p class="text-on-surface-variant mt-6 text-xl max-w-2xl leading-relaxed">Hemos trabajado con marcas en Colombia, México, Chile, Ecuador, Perú, Uruguay, República Dominicana y Estados Unidos, entendiendo cómo adaptar estrategia, pauta y escalado según el contexto de cada mercado.</p>
+    <div class="mb-10 md:mb-16">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Presencia Internacional</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">Performance adaptado<br/>a cada mercado</h2>
+      <p class="text-on-surface-variant mt-4 text-base md:text-xl max-w-2xl leading-relaxed">Hemos trabajado con marcas en Colombia, México, Chile, Ecuador, Perú, Uruguay, República Dominicana y Estados Unidos.</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇨🇴</span><div><p class="font-black uppercase text-sm">Colombia</p><p class="font-label text-[10px] text-neutral-500 uppercase">Mercado Local</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇲🇽</span><div><p class="font-black uppercase text-sm">México</p><p class="font-label text-[10px] text-neutral-500 uppercase">Escalado Regional</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇨🇱</span><div><p class="font-black uppercase text-sm">Chile</p><p class="font-label text-[10px] text-neutral-500 uppercase">Performance</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇺🇸</span><div><p class="font-black uppercase text-sm">Estados Unidos</p><p class="font-label text-[10px] text-neutral-500 uppercase">Mercado Premium</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇪🇨</span><div><p class="font-black uppercase text-sm">Ecuador</p><p class="font-label text-[10px] text-neutral-500 uppercase">Growth</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇵🇪</span><div><p class="font-black uppercase text-sm">Perú</p><p class="font-label text-[10px] text-neutral-500 uppercase">Optimización</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇺🇾</span><div><p class="font-black uppercase text-sm">Uruguay</p><p class="font-label text-[10px] text-neutral-500 uppercase">Escalado</p></div></div>
-      <div class="bg-surface-container-highest border border-primary/20 p-6 flex items-center gap-4 hover:border-primary transition-colors"><span class="text-3xl">🇩🇴</span><div><p class="font-black uppercase text-sm">Rep. Dominicana</p><p class="font-label text-[10px] text-neutral-500 uppercase">Performance</p></div></div>
-    </div>
-    <div class="mt-8 bg-primary/10 border border-primary/30 p-8">
-      <p class="font-black text-xl italic uppercase tracking-tight text-center">"Una obsesión por resultados. Ocho mercados. Experiencia construida en escenarios distintos."</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇨🇴</span><div><p class="font-black uppercase text-xs md:text-sm">Colombia</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Local</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇲🇽</span><div><p class="font-black uppercase text-xs md:text-sm">México</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Regional</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇨🇱</span><div><p class="font-black uppercase text-xs md:text-sm">Chile</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Performance</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇺🇸</span><div><p class="font-black uppercase text-xs md:text-sm">EE.UU.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Premium</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇪🇨</span><div><p class="font-black uppercase text-xs md:text-sm">Ecuador</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Growth</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇵🇪</span><div><p class="font-black uppercase text-xs md:text-sm">Perú</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Optimización</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇺🇾</span><div><p class="font-black uppercase text-xs md:text-sm">Uruguay</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Escalado</p></div></div>
+      <div class="bg-surface-container-highest border border-primary/10 p-4 md:p-6 flex items-center gap-3 hover:border-primary transition-colors"><span class="text-2xl md:text-3xl">🇩🇴</span><div><p class="font-black uppercase text-xs md:text-sm">R. Dominicana</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Performance</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- ══════════ PLANES ══════════ -->
-<section class="py-32 px-8 bg-neutral-900/50" id="plans">
+<section class="py-20 md:py-32 px-5 md:px-8 bg-black" id="planes">
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-20">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4 block">Elige tu Vehículo de Crecimiento</span>
-      <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic">Planes de Alto Rendimiento</h2>
+    <div class="text-center mb-14 md:mb-20">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Elige tu Vehículo de Crecimiento</span>
+      <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic">Planes de Alto Rendimiento</h2>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 items-start">
 
-      <!-- Plan 1 Sprint -->
-      <div class="plan-card bg-black border border-primary/30 p-10 flex flex-col h-full relative overflow-hidden shadow-2xl">
-        <div class="mb-8">
-          <h3 class="text-3xl font-black uppercase italic mb-2 text-white">Sprint de Validación</h3>
+      <!-- Sprint -->
+      <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
+        <div class="mb-6 md:mb-8">
+          <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Sprint de Validación</h3>
           <div class="flex items-baseline gap-2">
-            <span class="text-5xl font-black text-primary drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">USD 280</span>
-            <span class="text-neutral-500 font-label uppercase text-sm">/ Mes</span>
+            <span class="text-4xl md:text-5xl font-black text-primary">USD 280</span>
+            <span class="text-on-surface-variant font-label uppercase text-xs">/ Mes</span>
           </div>
         </div>
-        <div class="mb-8 bg-neutral-900 p-4 border-l-4 border-primary"><p class="text-sm font-bold italic text-neutral-300">Te ayuda a salir del ruido...</p></div>
-        <ul class="space-y-4 mb-12 flex-grow">
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Gestión de pauta hasta USD 2.000/mes</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Campañas en Meta Ads</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Estructura inicial de testing</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Revisión del producto/oferta</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Desarrollo de anuncios visuales</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Optimización base</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Seguimiento de rendimiento</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">check_circle</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">2 revisiones/mes</span></li>
+        <div class="mb-6 bg-surface-container-low p-4 border-l-4 border-primary"><p class="text-sm font-bold italic text-on-surface-variant">Te ayuda a salir del ruido...</p></div>
+        <ul class="space-y-3 mb-10 flex-grow">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Pauta hasta USD 2.000/mes</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Campañas en Meta Ads</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Estructura inicial de testing</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Revisión del producto/oferta</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Desarrollo de anuncios visuales</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Optimización base</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">2 revisiones/mes</span></li>
         </ul>
-        <div class="space-y-6">
-          <p class="text-xs font-label text-neutral-500 uppercase italic">No es un plan para escalar agresivamente...</p>
-          <button onclick="openForm('sprint')" class="w-full py-4 border-2 border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-colors">Empezar Sprint</button>
-        </div>
+        <button onclick="openForm('sprint')" class="w-full py-4 border-2 border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors text-sm">Empezar Sprint</button>
       </div>
 
-      <!-- Plan 2 Escalado Base (featured) -->
-      <div class="plan-card bg-white border-4 border-primary p-10 flex flex-col h-full relative transform md:scale-110 z-10 shadow-[0_0_60px_rgba(212,175,55,0.4)]">
-        <div class="absolute top-0 right-0 bg-black text-primary font-black text-[12px] px-6 py-2 uppercase tracking-widest">RECOMENDADO</div>
-        <div class="mb-8">
-          <h3 class="text-4xl font-black uppercase italic mb-2 text-black">Escalado Base</h3>
-          <div class="flex items-baseline gap-2">
-            <span class="text-6xl font-black text-black">USD 650</span>
-            <span class="text-neutral-600 font-label uppercase text-[10px] font-bold">/ Mes + 5% sobre excedente de inversión</span>
+      <!-- Escalado Base -->
+      <div class="plan-card border-4 border-primary p-7 md:p-10 flex flex-col h-full relative shadow-[0_0_50px_rgba(0,232,122,0.2)] z-10" style="background:#05120b;">
+        <div class="absolute top-0 right-0 bg-primary text-on-primary font-black text-[11px] px-5 py-2 uppercase tracking-widest">RECOMENDADO</div>
+        <div class="mb-6 md:mb-8">
+          <h3 class="text-3xl md:text-4xl font-black uppercase italic mb-2 text-primary">Escalado Base</h3>
+          <div class="flex items-baseline gap-2 flex-wrap">
+            <span class="text-4xl md:text-6xl font-black">USD 650</span>
+            <span class="text-on-surface-variant font-label uppercase text-[10px] font-bold">/ Mes + 5% excedente</span>
           </div>
         </div>
-        <div class="mb-8 bg-primary/10 p-4 border-l-4 border-primary"><p class="text-sm font-bold italic text-black">Empiezas a sentir que tu crecimiento deja de depender de la suerte...</p></div>
-        <ul class="space-y-4 mb-12 flex-grow">
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Gestión hasta USD 8.000/mes</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Meta/Google/TikTok Ads</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Estructura de escalado</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Testing creativo constante</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Anuncios de performance</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Revisión estratégica</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Optimización continua</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">Análisis de escalado</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-2xl">bolt</span><span class="text-sm uppercase font-black tracking-tight text-black">2 revisiones estratégicas/mes</span></li>
+        <div class="mb-6 p-4 border-l-4 border-primary" style="background:rgba(0,232,122,0.06);"><p class="text-sm font-bold italic text-on-surface-variant">Tu crecimiento deja de depender de la suerte...</p></div>
+        <ul class="space-y-3 mb-10 flex-grow">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Pauta hasta USD 8.000/mes</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Meta / Google / TikTok Ads</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Estructura de escalado</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Testing creativo constante</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Anuncios de performance</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Revisión estratégica</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">Optimización continua</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">bolt</span><span class="text-xs md:text-sm uppercase font-black tracking-tight">2 revisiones estratégicas/mes</span></li>
         </ul>
-        <div class="space-y-6">
-          <p class="text-xs font-label text-neutral-700 uppercase italic font-bold">Aquí ya no estás pagando por 'manejo de anuncios'...</p>
-          <button onclick="openForm('base')" class="w-full py-5 bg-black text-white font-black uppercase tracking-widest hover:bg-primary hover:text-black transition-all shadow-xl text-lg">Quiero Escalar</button>
-        </div>
+        <button onclick="openForm('base')" class="w-full py-5 bg-primary text-on-primary font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(0,232,122,0.4)] transition-all text-base">Quiero Escalar</button>
       </div>
 
-      <!-- Plan 3 Enterprise -->
-      <div class="plan-card bg-black border border-primary/30 p-10 flex flex-col h-full relative overflow-hidden shadow-2xl">
-        <div class="mb-8">
-          <h3 class="text-3xl font-black uppercase italic mb-2 text-white">Enterprise</h3>
-          <div class="flex items-baseline gap-2">
-            <span class="text-5xl font-black text-primary drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">CUSTOM</span>
-          </div>
+      <!-- Enterprise -->
+      <div class="plan-card bg-surface-container border border-primary/20 p-7 md:p-10 flex flex-col h-full relative shadow-2xl">
+        <div class="mb-6 md:mb-8">
+          <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-2">Enterprise</h3>
+          <span class="text-4xl md:text-5xl font-black text-primary">CUSTOM</span>
         </div>
-        <div class="mb-8 bg-neutral-900 p-4 border-l-4 border-primary"><p class="text-sm font-bold italic text-neutral-300">Pensado para marcas que ya no necesitan una agencia más...</p></div>
-        <ul class="space-y-4 mb-12 flex-grow">
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Estructura personalizada</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Gestión y estrategia adaptadas</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Enfoque de escalado profundo</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Priorización estratégica</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Mayor acompañamiento</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Revisión de contexto completo</span></li>
-          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-xl">hub</span><span class="text-sm uppercase font-bold tracking-tight text-neutral-200">Propuesta adaptada</span></li>
+        <div class="mb-6 bg-surface-container-low p-4 border-l-4 border-primary"><p class="text-sm font-bold italic text-on-surface-variant">Para marcas que ya no necesitan una agencia más...</p></div>
+        <ul class="space-y-3 mb-10 flex-grow">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Estructura personalizada</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Gestión y estrategia adaptadas</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Escalado profundo</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Mayor acompañamiento</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Revisión de contexto completo</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">hub</span><span class="text-xs md:text-sm uppercase font-bold tracking-tight text-on-surface-variant">Propuesta adaptada</span></li>
         </ul>
-        <div class="space-y-6">
-          <p class="text-xs font-label text-neutral-500 uppercase italic">Si tu marca necesita algo más robusto...</p>
-          <button onclick="openForm('enterprise')" class="w-full py-4 bg-primary text-black font-black uppercase tracking-widest hover:bg-white transition-colors">Hablar con ventas</button>
-        </div>
+        <button onclick="openForm('enterprise')" class="w-full py-4 bg-primary text-on-primary font-black uppercase tracking-widest hover:opacity-90 transition-colors text-sm">Hablar con ventas</button>
       </div>
 
     </div>
@@ -435,180 +692,212 @@
 </section>
 
 <!-- ══════════ TEAM ══════════ -->
-<section class="py-32 px-8 bg-surface">
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface">
   <div class="max-w-7xl mx-auto">
-    <div class="mb-20">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4 block">Estrategas al Mando</span>
-      <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic">El Equipo tras el Sistema</h2>
-      <p class="text-on-surface-variant mt-4 text-lg max-w-2xl">Criterio construido sobre cuentas reales, no sobre discurso. Más de 6 años trabajando crecimiento digital y performance para marcas en Latinoamérica y Estados Unidos.</p>
+    <div class="mb-12 md:mb-20">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Estrategas al Mando</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">El Equipo tras el Sistema</h2>
+      <p class="text-on-surface-variant mt-3 text-sm md:text-lg max-w-2xl">Criterio construido sobre cuentas reales. +6 años trabajando performance para marcas en Latam y EE.UU.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      <div class="space-y-6 group">
-        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/20 group-hover:border-primary">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+      <div class="space-y-5 group">
+        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/10 group-hover:border-primary">
           <img alt="Felipe Velasco" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ugqYz6fWrlyPsw12pBOImEw9MJCbM8k31UNqdB5MRb-GI9gfJUIm45mtO-XuMo31YIEcE_uskEGxg3s6TkyefUBT0KZJF3WFnFUC_w_UrWAcUJT3w0GsdtCFutUHBn4tMoeFWKo86hs7fqHepX7HyE7yrA_Y15Slr5VYqcgvwSTa6JOZoQ0amKQk1RKaxNXESEwcQigrF4weTlVgHvzrNFS3C3Z6LIgmbA-K0VQbyV-PhdcUl-rEY_wC6YBRXFm7CzlzYv0uqsPFMg"/>
         </div>
-        <div class="space-y-2"><h3 class="text-2xl font-black uppercase italic">Felipe Velasco</h3><p class="font-label text-primary text-sm uppercase tracking-widest">Co-founder · Estrategia de Datos y Growth Marketing</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-sm">Especialista en arquitectura de datos de marketing y Growth Marketing. Diseña los sistemas de tracking, modelado de atribución y estrategia de pauta que permiten a las marcas tomar decisiones de crecimiento con datos verificables. Ha gestionado más de 100B en eventos de conversión procesados para clientes en Colombia, México y Chile.</p></div>
+        <div><h3 class="text-xl md:text-2xl font-black uppercase italic">Felipe Velasco</h3><p class="font-label text-primary text-xs uppercase tracking-widest mb-2">Co-founder · Datos y Growth</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-xs md:text-sm">Especialista en arquitectura de datos de marketing y Growth Marketing. Diseña sistemas de tracking y modelado de atribución. +100B en eventos de conversión gestionados.</p></div>
       </div>
-      <div class="space-y-6 group">
-        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/20 group-hover:border-primary">
+      <div class="space-y-5 group">
+        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/10 group-hover:border-primary">
           <img alt="Cristian Salazar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ujTGwEH4xwuIGySkR2zSxh_RQ3rk4ftPDO2gT3oIHI1NQz2iXAbCQPW0wek-VMdHxZ7cxYo6OTCWE4aoelrzYgNsSWQFbAJYhOfVYzEjhu0DvliC6_rJcAUkKH47NaH4LmedErARJnR83zA2Sy-dPxwSt_LvCCNeUZFX5cAfWwMdrX5nnJPMmiU_HS-3IFQLjjBn94sVQ0oq-OknDCxp8-3Fi4pPEJUY4pTaXwTRfpX_9Pj6QjvZXwc_S97TUU_k90i26JgcxndDA"/>
         </div>
-        <div class="space-y-2"><h3 class="text-2xl font-black uppercase italic">Cristian Salazar</h3><p class="font-label text-primary text-sm uppercase tracking-widest">Co-founder · Derecho Digital y Legal</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-sm">Abogado especializado en derecho digital y comercial. Estructura la base legal de los negocios online de los clientes de Agorax: contratos digitales, registro de marca ante SIC, protección de datos bajo la ley de HABEAS DATA colombiana y cumplimiento normativo para operar en Latam.</p></div>
+        <div><h3 class="text-xl md:text-2xl font-black uppercase italic">Cristian Salazar</h3><p class="font-label text-primary text-xs uppercase tracking-widest mb-2">Co-founder · Derecho Digital</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-xs md:text-sm">Abogado en derecho digital y comercial. Contratos digitales, registro de marca ante SIC, HABEAS DATA y cumplimiento normativo para operar en Latam.</p></div>
       </div>
-      <div class="space-y-6 group">
-        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/20 group-hover:border-primary">
-          <img alt="Jhon Mario Hernández Bueno" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0uhvjlW3U6LU6XzWfPW7wcQJ2K1O6HYoQ7DeVMdhHZRBioqbpSbKOcZ4LDjYmudauH3cwLf26KnlWne-OKz1jhz5o4yOdaJz1B7Vtwuj9mCvmiOaanyIypfHunolxWIvbIRad5daFeS5XgNH64e_KM-fHlRK2zijonYUJf8LpUw0J5JAkyc65IeGpNrHFHp6itXWcnjZbM-Lc9mAaiwq1O_VrF8cVlUZoz6MJLIxXP3dnpJY5f7u9m9g52CVSleaD35bBTAeDehVr00"/>
+      <div class="space-y-5 group">
+        <div class="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border-b-4 border-primary/10 group-hover:border-primary">
+          <img alt="Jhon Mario Hernández" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0uhvjlW3U6LU6XzWfPW7wcQJ2K1O6HYoQ7DeVMdhHZRBioqbpSbKOcZ4LDjYmudauH3cwLf26KnlWne-OKz1jhz5o4yOdaJz1B7Vtwuj9mCvmiOaanyIypfHunolxWIvbIRad5daFeS5XgNH64e_KM-fHlRK2zijonYUJf8LpUw0J5JAkyc65IeGpNrHFHp6itXWcnjZbM-Lc9mAaiwq1O_VrF8cVlUZoz6MJLIxXP3dnpJY5f7u9m9g52CVSleaD35bBTAeDehVr00"/>
         </div>
-        <div class="space-y-2"><h3 class="text-2xl font-black uppercase italic">Jhon Mario Hernández Bueno</h3><p class="font-label text-primary text-sm uppercase tracking-widest">LIDER ESPECIALISTA · Growth / Performance Lead</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-sm">Especialista en Growth y Performance con más de 6 años de experiencia. Ha trabajado con clientes en Uruguay, Chile, Ecuador, México, República Dominicana, Estados Unidos, Colombia y Perú. Convierte la inversión publicitaria en un sistema de crecimiento claro, medible y sostenible.</p></div>
+        <div><h3 class="text-xl md:text-2xl font-black uppercase italic">Jhon Mario Hernández</h3><p class="font-label text-primary text-xs uppercase tracking-widest mb-2">Líder Especialista · Growth &amp; Performance</p><p class="text-on-surface-variant font-bold italic border-l-2 border-primary pl-4 py-1 text-xs md:text-sm">+6 años en marketing digital y performance. Clientes en Uruguay, Chile, Ecuador, México, Rep. Dominicana, EE.UU., Colombia y Perú. Convierte inversión publicitaria en sistema.</p></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════ TESTIMONIALS ══════════ -->
-<section class="py-32 px-8 bg-surface-container-low" id="testimonials">
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low" id="testimoniales">
   <div class="max-w-7xl mx-auto">
-    <div class="mb-16">
-      <span class="font-label text-primary uppercase tracking-[0.3em] text-sm mb-4 block">Lo que pasa cuando deja de ser improvisado</span>
-      <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic">Cuando la estructura cambia,<br/>los resultados también</h2>
+    <div class="mb-10 md:mb-16">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Lo que pasa cuando deja de ser improvisado</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">Cuando la estructura cambia,<br/>los resultados también</h2>
     </div>
-    <div class="grid md:grid-cols-2 gap-px bg-outline-variant/20">
-      <div class="bg-surface p-16 space-y-8"><span class="material-symbols-outlined text-primary text-6xl">format_quote</span><p class="text-3xl font-bold italic">"Antes subíamos presupuesto y el rendimiento se rompía. Con Agorax empezamos a tener más claridad sobre qué escalar y cómo crecer con más control."</p><div class="pt-8 border-t border-outline-variant/20"><p class="font-label text-sm uppercase tracking-widest text-primary">Founder @ UrbanTech</p></div></div>
-      <div class="bg-surface p-16 space-y-8 border-l border-outline-variant/10"><span class="material-symbols-outlined text-primary text-6xl">format_quote</span><p class="text-3xl font-bold italic">"No era falta de ventas. Era falta de estructura y lectura de cuenta. Entendieron el negocio antes que el pixel."</p><div class="pt-8 border-t border-outline-variant/20"><p class="font-label text-sm uppercase tracking-widest text-primary">CEO @ GlowSkincare</p></div></div>
-      <div class="bg-surface-container-high p-16 space-y-8 border-t border-outline-variant/10"><span class="material-symbols-outlined text-primary text-6xl">format_quote</span><p class="text-3xl font-bold italic">"Empezamos a entender qué anuncios merecían más presupuesto y cuáles solo estaban consumiendo dinero. Eso fue el cambio."</p><div class="pt-8 border-t border-outline-variant/20"><p class="font-label text-sm uppercase tracking-widest text-primary">Director @ FitBrands Latam</p></div></div>
-      <div class="bg-surface-container-high p-16 space-y-8 border-t border-outline-variant/10 border-l border-outline-variant/10"><span class="material-symbols-outlined text-primary text-6xl">format_quote</span><p class="text-3xl font-bold italic">"No necesitábamos más tráfico. Necesitábamos saber qué hacer con el que ya teníamos. Agorax fue la diferencia entre improvisar y tener un sistema."</p><div class="pt-8 border-t border-outline-variant/20"><p class="font-label text-sm uppercase tracking-widest text-primary">CMO @ NovaModa México</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- Dream Vision -->
-<section class="py-40 px-8 bg-surface relative overflow-hidden">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-end gap-20">
-    <div class="md:w-1/2 space-y-12">
-      <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none">Así debería <br/>sentirse tu <span class="text-primary">negocio</span></h2>
-      <ul class="space-y-6">
-        <li class="flex items-center gap-4 text-2xl font-bold"><span class="material-symbols-outlined text-primary">check_circle</span>Saber qué anuncio escalar</li>
-        <li class="flex items-center gap-4 text-2xl font-bold"><span class="material-symbols-outlined text-primary">check_circle</span>Tener control sobre tu crecimiento</li>
-        <li class="flex items-center gap-4 text-2xl font-bold"><span class="material-symbols-outlined text-primary">check_circle</span>No depender del orgánico</li>
-        <li class="flex items-center gap-4 text-2xl font-bold"><span class="material-symbols-outlined text-primary">check_circle</span>Ver que cada dólar tiene sentido</li>
-      </ul>
-    </div>
-    <div class="md:w-1/2">
-      <p class="text-6xl md:text-8xl font-black uppercase tracking-tighter italic text-surface-container-highest">No es suerte. <br/>Es sistema.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-px" style="background:#111;">
+      <div class="bg-surface p-8 md:p-16 space-y-6"><span class="material-symbols-outlined text-primary text-5xl">format_quote</span><p class="text-xl md:text-3xl font-bold italic">"Antes subíamos presupuesto y el rendimiento se rompía. Con Agorax empezamos a tener claridad sobre qué escalar."</p><div class="pt-6 border-t border-outline-variant/20"><p class="font-label text-xs uppercase tracking-widest text-primary">Founder @ UrbanTech</p></div></div>
+      <div class="bg-surface p-8 md:p-16 space-y-6" style="border-left:1px solid #1c1c1c;"><span class="material-symbols-outlined text-primary text-5xl">format_quote</span><p class="text-xl md:text-3xl font-bold italic">"No era falta de ventas. Era falta de estructura. Entendieron el negocio antes que el pixel."</p><div class="pt-6 border-t border-outline-variant/20"><p class="font-label text-xs uppercase tracking-widest text-primary">CEO @ GlowSkincare</p></div></div>
+      <div class="bg-surface-container-high p-8 md:p-16 space-y-6" style="border-top:1px solid #1c1c1c;"><span class="material-symbols-outlined text-primary text-5xl">format_quote</span><p class="text-xl md:text-3xl font-bold italic">"Empezamos a entender qué anuncios merecían más presupuesto y cuáles consumían dinero. Eso fue el cambio."</p><div class="pt-6 border-t border-outline-variant/20"><p class="font-label text-xs uppercase tracking-widest text-primary">Director @ FitBrands Latam</p></div></div>
+      <div class="bg-surface-container-high p-8 md:p-16 space-y-6" style="border-top:1px solid #1c1c1c;border-left:1px solid #1c1c1c;"><span class="material-symbols-outlined text-primary text-5xl">format_quote</span><p class="text-xl md:text-3xl font-bold italic">"No necesitábamos más tráfico. Agorax fue la diferencia entre improvisar y tener un sistema."</p><div class="pt-6 border-t border-outline-variant/20"><p class="font-label text-xs uppercase tracking-widest text-primary">CMO @ NovaModa México</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- Filter -->
-<section class="py-32 px-8 bg-surface-container-low border-y border-outline-variant/10" id="filter">
-  <div class="max-w-7xl mx-auto space-y-20">
+<!-- ══════════ REVIEWS GOOGLE ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="reviews">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 md:mb-16 reveal">
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant">Google Reviews</span>
+      </div>
+      <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic">Lo que dicen en <span class="text-primary">Google</span></h2>
+      <div class="flex items-center justify-center gap-3 mt-5">
+        <span class="text-4xl md:text-5xl font-black">4.9</span>
+        <div><div class="flex gap-1"><span class="text-[#FBBC05] text-xl md:text-2xl">★★★★★</span></div><p class="font-label text-[9px] uppercase text-on-surface-variant tracking-widest mt-1">Google Business</p></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      <div class="review-card bg-surface-container-highest border border-outline-variant/20 p-6 md:p-8 flex flex-col gap-4">
+        <div class="flex justify-between"><div class="flex gap-0.5"><span class="text-[#FBBC05] text-sm">★★★★★</span></div></div>
+        <p class="text-on-surface-variant leading-relaxed font-bold italic flex-1 text-sm">"En menos de 3 semanas teníamos estructura clara y los números empezaron a mejorar."</p>
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3"><div class="w-9 h-9 bg-primary flex items-center justify-center font-black text-on-primary text-sm">C</div><div><p class="font-black uppercase text-xs">Carlos M.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Moda · Colombia</p></div></div>
+      </div>
+      <div class="review-card bg-surface-container-highest border border-outline-variant/20 p-6 md:p-8 flex flex-col gap-4">
+        <div class="flex justify-between"><div class="flex gap-0.5"><span class="text-[#FBBC05] text-sm">★★★★★</span></div></div>
+        <p class="text-on-surface-variant leading-relaxed font-bold italic flex-1 text-sm">"Llevaba un año con otra agencia sin resultados. El primer mes con AGORAX entendí por qué fallaba antes."</p>
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3"><div class="w-9 h-9 bg-primary flex items-center justify-center font-black text-on-primary text-sm">A</div><div><p class="font-black uppercase text-xs">Andrea R.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Skincare · México</p></div></div>
+      </div>
+      <div class="review-card bg-surface-container-highest border border-outline-variant/20 p-6 md:p-8 flex flex-col gap-4">
+        <div class="flex justify-between"><div class="flex gap-0.5"><span class="text-[#FBBC05] text-sm">★★★★★</span></div></div>
+        <p class="text-on-surface-variant leading-relaxed font-bold italic flex-1 text-sm">"El ROAS lo logramos. Más importante: ahora sé qué escalar y qué cortar."</p>
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3"><div class="w-9 h-9 bg-primary flex items-center justify-center font-black text-on-primary text-sm">D</div><div><p class="font-black uppercase text-xs">Diego P.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">FitBrands · Chile</p></div></div>
+      </div>
+      <div class="review-card bg-surface-container-highest border border-outline-variant/20 p-6 md:p-8 flex flex-col gap-4">
+        <div class="flex justify-between"><div class="flex gap-0.5"><span class="text-[#FBBC05] text-sm">★★★★★</span></div></div>
+        <p class="text-on-surface-variant leading-relaxed font-bold italic flex-1 text-sm">"Trabajé con tres agencias. AGORAX es la única que me habló de márgenes y oferta antes de ads."</p>
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3"><div class="w-9 h-9 bg-primary flex items-center justify-center font-black text-on-primary text-sm">V</div><div><p class="font-black uppercase text-xs">Valentina S.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">NovaModa · México</p></div></div>
+      </div>
+      <div class="review-card bg-surface-container-highest border border-outline-variant/20 p-6 md:p-8 flex flex-col gap-4">
+        <div class="flex justify-between"><div class="flex gap-0.5"><span class="text-[#FBBC05] text-sm">★★★★★</span></div></div>
+        <p class="text-on-surface-variant leading-relaxed font-bold italic flex-1 text-sm">"6 meses estancada mi tienda. En el segundo mes con AGORAX triplicamos ventas."</p>
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center gap-3"><div class="w-9 h-9 bg-primary flex items-center justify-center font-black text-on-primary text-sm">R</div><div><p class="font-black uppercase text-xs">Roberto A.</p><p class="font-label text-[9px] text-on-surface-variant uppercase">Suplementos · Perú</p></div></div>
+      </div>
+      <div class="review-card bg-primary p-6 md:p-8 flex flex-col justify-between gap-4">
+        <div><div class="flex gap-0.5 mb-3"><span class="text-on-primary/70 text-xl">★★★★★</span></div><p class="text-on-primary font-black text-4xl italic tracking-tighter">4.9 / 5</p><p class="font-label text-[10px] uppercase tracking-widest text-on-primary/60 mt-1">Google Reviews</p></div>
+        <a href="https://g.page/r/TU_GOOGLE_REVIEW_LINK" target="_blank" class="bg-on-primary text-primary font-black uppercase tracking-widest text-xs py-3 flex items-center justify-center gap-2 hover:bg-black hover:text-white transition-colors">Ver todas en Google</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FILTER ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface-container-low border-y border-outline-variant/20">
+  <div class="max-w-7xl mx-auto space-y-12 md:space-y-20">
     <div class="text-center">
-      <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic mb-4">No es para todos</h2>
-      <div class="h-1 w-40 bg-primary mx-auto"></div>
-      <p class="text-on-surface-variant mt-6 text-lg max-w-xl mx-auto">Solo entramos en marcas con señales reales. No trabajamos con cualquier e-commerce.</p>
+      <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter italic mb-4">No es para todos</h2>
+      <div class="h-1 w-32 md:w-40 bg-primary mx-auto"></div>
+      <p class="text-on-surface-variant mt-5 text-sm md:text-lg max-w-xl mx-auto">Solo entramos en marcas con señales reales.</p>
     </div>
-    <div class="grid md:grid-cols-2 gap-12">
-      <div class="bg-surface-container-highest p-12 border-t-8 border-error">
-        <h3 class="font-label text-error uppercase tracking-widest text-2xl mb-12">AGORAX NO ES PARA TI SI:</h3>
-        <ul class="space-y-8">
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-xl font-bold uppercase opacity-60 italic">Si no has vendido nada todavía</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-xl font-bold uppercase opacity-60 italic">Si no tienes producto validado</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-xl font-bold uppercase opacity-60 italic">Si buscas resultados rápidos sin inversión</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-xl font-bold uppercase opacity-60 italic">Si no tienes stock real para escalar</span></li>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+      <div class="bg-surface-container-highest p-8 md:p-12 border-t-8 border-error">
+        <h3 class="font-label text-error uppercase tracking-widest text-lg md:text-2xl mb-8">NO ES PARA TI SI:</h3>
+        <ul class="space-y-5 md:space-y-8">
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-base md:text-xl font-bold uppercase opacity-60 italic">No has vendido nada todavía</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-base md:text-xl font-bold uppercase opacity-60 italic">No tienes producto validado</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-base md:text-xl font-bold uppercase opacity-60 italic">Buscas resultados sin inversión</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-error">close</span><span class="text-base md:text-xl font-bold uppercase opacity-60 italic">No tienes stock real para escalar</span></li>
         </ul>
       </div>
-      <div class="bg-surface-container-highest p-12 border-t-8 border-primary">
-        <h3 class="font-label text-primary uppercase tracking-widest text-2xl mb-12">TRABAJAMOS CONTIGO SI:</h3>
-        <ul class="space-y-8">
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-xl font-bold uppercase italic">Si ya vendes y tienes stock real</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-xl font-bold uppercase italic">Si quieres escalar en serio y rápido</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-xl font-bold uppercase italic">Si estás listo para dejar de improvisar</span></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-xl font-bold uppercase italic">Si entiendes que el sistema importa más que la suerte</span></li>
+      <div class="bg-surface-container-highest p-8 md:p-12 border-t-8 border-primary">
+        <h3 class="font-label text-primary uppercase tracking-widest text-lg md:text-2xl mb-8">TRABAJAMOS CONTIGO SI:</h3>
+        <ul class="space-y-5 md:space-y-8">
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-base md:text-xl font-bold uppercase italic">Ya vendes y tienes stock real</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-base md:text-xl font-bold uppercase italic">Quieres escalar en serio y rápido</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-base md:text-xl font-bold uppercase italic">Listo para dejar de improvisar</span></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary">check</span><span class="text-base md:text-xl font-bold uppercase italic">El sistema importa más que la suerte</span></li>
         </ul>
       </div>
     </div>
-    <p class="text-center text-3xl font-black italic uppercase tracking-tighter pt-12">"Si no hay base, no hay escalado."</p>
+    <p class="text-center text-xl md:text-3xl font-black italic uppercase tracking-tighter pt-4">"Si no hay base, no hay escalado."</p>
   </div>
 </section>
 
-<!-- Final CTA -->
-<section class="py-40 px-8 bg-surface relative overflow-hidden">
-  <div class="absolute inset-0 bg-primary opacity-5 mix-blend-overlay"></div>
-  <div class="max-w-5xl mx-auto text-center space-y-12 relative z-10">
-    <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] italic">Si tu tienda ya vende… pero sabes que puede dar más</h2>
-    <div class="space-y-6">
-      <a href="#plans" class="bg-primary text-on-primary font-black text-2xl md:text-4xl px-16 py-8 uppercase hover:shadow-[0_0_50px_rgba(212,175,55,0.5)] transition-all inline-block">
+<!-- ══════════ FAQ ══════════ -->
+<section class="py-20 md:py-32 px-5 md:px-8 bg-surface" id="faq">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12 md:mb-20 reveal">
+      <span class="font-label text-primary uppercase tracking-[0.3em] text-xs md:text-sm mb-3 block">Todo lo que necesitas saber</span>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-tighter italic">Preguntas <span class="text-primary">Frecuentes</span></h2>
+    </div>
+    <div class="space-y-0 border border-outline-variant/20">
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿Necesito experiencia previa en ads?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">No. Nosotros nos encargamos de todo lo técnico. Lo que necesitas es un negocio activo con ventas reales y producto validado.</p></div></div>
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿En cuánto tiempo veo resultados?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">Primeros indicadores en 2–3 semanas. Resultados de escalado real entre el mes 1 y 2 según el punto de partida.</p></div></div>
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿El presupuesto de pauta está incluido?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">No. El plan es nuestra tarifa de gestión. El presupuesto de pauta lo manejas tú directamente. Nosotros te decimos cómo y cuánto invertir.</p></div></div>
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿Trabajan con cualquier producto?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">Producto físico, marcas propias, dropshipping y algunos servicios/infoproductos. Lo clave: ventas activas y stock real.</p></div></div>
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿Puedo cancelar en cualquier momento?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">Sí. Compromisos mensuales. No hay contratos anuales. El proceso necesita al menos 60 días para madurar correctamente.</p></div></div>
+      <div class="faq-item"><button class="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-surface-container-high transition-colors" onclick="toggleFaq(this)"><span class="font-black uppercase text-base md:text-lg pr-6">¿En qué países operan?</span><span class="material-symbols-outlined text-primary text-xl md:text-2xl faq-icon flex-shrink-0">add</span></button><div class="faq-answer"><p class="text-on-surface-variant leading-relaxed font-bold px-6 md:px-8 pb-6 md:pb-8 text-sm">Colombia, México, Chile, Ecuador, Perú, Uruguay, República Dominicana y EE.UU. Otros países hispanohablantes, consúltanos.</p></div></div>
+    </div>
+    <div class="mt-8 bg-surface-container-highest p-6 md:p-8 border-l-4 border-primary text-center">
+      <p class="font-bold text-on-surface-variant mb-4 text-sm">¿Otra pregunta?</p>
+      <a href="https://wa.me/TU_NUMERO" target="_blank" class="inline-flex items-center gap-3 bg-[#25D366] text-white font-black uppercase tracking-widest text-xs px-6 py-3 hover:bg-[#1ebe5d] transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Preguntar por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FINAL CTA ══════════ -->
+<section class="py-24 md:py-40 px-5 md:px-8 bg-surface relative overflow-hidden">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,232,122,0.06), transparent);"></div>
+  <div class="max-w-5xl mx-auto text-center space-y-8 md:space-y-12 relative z-10">
+    <h2 class="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] italic">Si tu tienda ya vende… pero sabes que puede dar más</h2>
+    <div class="space-y-4 md:space-y-6">
+      <a href="#planes" class="bg-primary text-on-primary font-black text-xl md:text-4xl px-10 md:px-16 py-6 md:py-8 uppercase hover:shadow-[0_0_50px_rgba(0,232,122,0.4)] transition-all inline-block w-full md:w-auto text-center">
         👉 Quiero escalar mi tienda
       </a>
-      <p class="font-label text-neutral-400 uppercase tracking-[0.4em] text-sm">No es una llamada de venta.</p>
+      <p class="font-label text-on-surface-variant uppercase tracking-[0.3em] text-xs">No es una llamada de venta.</p>
     </div>
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-neutral-950 w-full py-12 px-8 border-t border-neutral-800/15">
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 w-full">
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="bg-black w-full py-10 md:py-12 px-5 md:px-8 border-t border-outline-variant/20">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 w-full">
     <img alt="AGORAX" class="w-auto h-10" src="https://lh3.googleusercontent.com/aida/ADBb0uhhDk_yir8BYnb8tx1AwBrFmILa_S9p6YIHQTCNm5YH6HGsDD_31_sH1ebFDtwC2ZnyCap1hb6y8ScmhsgWbRnZ2hVz1paagvtsqJpPN20nylAGlO1KwHVkYGQGzElELC95qDKyx0R1ys241SD0_dpv8WOdilnSUfDJ8u6DA3CRJsAlYh5G2KEuIVHmjWvTfYgJ4ZvyMjqQU3zfyK4ikJaJG8FpHKsQfpJGABiguY3ayyGLpJReF3NItsjYr4Qq7pkiZbY1oFnbaw"/>
-    <div class="font-label text-xs uppercase tracking-widest text-neutral-500 text-center">© 2024 AGORAX. HIGH-PERFORMANCE EDITORIAL.</div>
-    <div class="flex gap-8">
-      <a class="font-label text-xs uppercase tracking-widest text-neutral-500 hover:text-white transition-colors" href="#">Privacy Policy</a>
-      <a class="font-label text-xs uppercase tracking-widest text-neutral-500 hover:text-white transition-colors" href="#">Terms of Service</a>
-      <a class="font-label text-xs uppercase tracking-widest text-neutral-500 hover:text-white transition-colors" href="#">Contact</a>
+    <div class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant text-center">© 2024 AGORAX. HIGH-PERFORMANCE EDITORIAL.</div>
+    <div class="flex gap-6">
+      <a class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Privacidad</a>
+      <a class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Términos</a>
+      <a class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Contacto</a>
     </div>
   </div>
 </footer>
 
 <!-- ══════════════════════════════════════════
-     MODAL FORMULARIO DE DIAGNÓSTICO
+     MODAL FORMULARIO
 ══════════════════════════════════════════ -->
 <div id="form-modal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
   <div class="modal-box form-appear" id="modal-box">
-
-    <!-- Header dinámico por plan -->
-    <div id="modal-header" class="bg-primary p-8 flex items-start justify-between gap-4">
+    <div id="modal-header" class="p-6 md:p-8 flex items-start justify-between gap-4 border-b border-primary/30" style="background:rgba(0,232,122,0.08);">
       <div>
-        <span id="modal-plan-label" class="font-label text-[10px] uppercase tracking-[0.3em] text-on-primary/70 block mb-2">Plan seleccionado</span>
-        <h2 id="modal-plan-title" class="text-3xl font-black uppercase italic text-on-primary leading-none"></h2>
-        <p id="modal-plan-price" class="font-label font-bold uppercase text-on-primary/80 text-sm mt-2"></p>
+        <span id="modal-plan-label" class="font-label text-[10px] uppercase tracking-[0.3em] text-primary/70 block mb-2">Plan seleccionado</span>
+        <h2 id="modal-plan-title" class="text-2xl md:text-3xl font-black uppercase italic text-primary leading-none"></h2>
+        <p id="modal-plan-price" class="font-label font-bold uppercase text-on-surface-variant text-xs mt-2"></p>
       </div>
-      <button onclick="closeForm()" class="text-on-primary hover:text-on-primary/60 transition-colors flex-shrink-0 mt-1">
-        <span class="material-symbols-outlined text-3xl">close</span>
+      <button onclick="closeForm()" class="text-on-surface-variant hover:text-primary transition-colors flex-shrink-0 mt-1">
+        <span class="material-symbols-outlined text-2xl">close</span>
       </button>
     </div>
-
-    <div class="p-8 space-y-8">
-
-      <!-- Tipo de negocio -->
-      <div class="space-y-4">
-        <label class="font-label text-[11px] uppercase tracking-[0.25em] text-primary block">Tipo de Negocio</label>
-        <div class="grid grid-cols-2 gap-3" id="business-type-grid">
-          <div class="plan-opt p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'E-commerce / Tienda Online')">
-            <div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-3 transition-colors"></div>
-            <p class="font-black uppercase text-sm">E-commerce</p>
-            <p class="font-label text-[10px] text-neutral-500 uppercase mt-1">Tienda online</p>
-          </div>
-          <div class="plan-opt p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Marca de Producto Físico')">
-            <div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-3 transition-colors"></div>
-            <p class="font-black uppercase text-sm">Producto Físico</p>
-            <p class="font-label text-[10px] text-neutral-500 uppercase mt-1">Marca propia</p>
-          </div>
-          <div class="plan-opt p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Dropshipping / Importación')">
-            <div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-3 transition-colors"></div>
-            <p class="font-black uppercase text-sm">Dropshipping</p>
-            <p class="font-label text-[10px] text-neutral-500 uppercase mt-1">Importación</p>
-          </div>
-          <div class="plan-opt p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Servicio / Infoproducto')">
-            <div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-3 transition-colors"></div>
-            <p class="font-black uppercase text-sm">Servicio</p>
-            <p class="font-label text-[10px] text-neutral-500 uppercase mt-1">Infoproducto</p>
-          </div>
+    <div class="p-6 md:p-8 space-y-6 md:space-y-8">
+      <div class="space-y-3">
+        <label class="font-label text-[10px] uppercase tracking-[0.25em] text-primary block">Tipo de Negocio</label>
+        <div class="grid grid-cols-2 gap-2 md:gap-3">
+          <div class="plan-opt p-3 md:p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'E-commerce / Tienda Online')"><div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-2 md:mb-3 transition-colors"></div><p class="font-black uppercase text-xs md:text-sm">E-commerce</p><p class="font-label text-[9px] text-on-surface-variant uppercase mt-0.5">Tienda online</p></div>
+          <div class="plan-opt p-3 md:p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Marca de Producto Físico')"><div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-2 md:mb-3 transition-colors"></div><p class="font-black uppercase text-xs md:text-sm">Producto Físico</p><p class="font-label text-[9px] text-on-surface-variant uppercase mt-0.5">Marca propia</p></div>
+          <div class="plan-opt p-3 md:p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Dropshipping / Importación')"><div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-2 md:mb-3 transition-colors"></div><p class="font-black uppercase text-xs md:text-sm">Dropshipping</p><p class="font-label text-[9px] text-on-surface-variant uppercase mt-0.5">Importación</p></div>
+          <div class="plan-opt p-3 md:p-4 bg-surface-container-highest cursor-pointer" onclick="selectBusinessType(this,'Servicio / Infoproducto')"><div class="w-3 h-3 border border-primary/40 plan-opt-dot mb-2 md:mb-3 transition-colors"></div><p class="font-black uppercase text-xs md:text-sm">Servicio</p><p class="font-label text-[9px] text-on-surface-variant uppercase mt-0.5">Infoproducto</p></div>
         </div>
         <input type="hidden" id="field-business-type"/>
       </div>
-
-      <!-- Datos principales -->
-      <div class="space-y-4">
-        <label class="font-label text-[11px] uppercase tracking-[0.25em] text-primary block">Datos del Negocio</label>
+      <div class="space-y-3">
+        <label class="font-label text-[10px] uppercase tracking-[0.25em] text-primary block">Datos del Negocio</label>
         <input class="agx-input" id="field-business-name" placeholder="Nombre del Negocio" type="text"/>
         <input class="agx-input" id="field-contact-name" placeholder="Nombre del Encargado" type="text"/>
         <select class="agx-input agx-select" id="field-country">
@@ -617,192 +906,115 @@
           <option>Ecuador</option><option>Perú</option><option>Uruguay</option>
           <option>República Dominicana</option><option>Estados Unidos</option><option>Otro</option>
         </select>
-        <input class="agx-input" id="field-website" placeholder="Sitio Web o Red Social del Negocio" type="text"/>
-
-        <!-- ── NUEVOS CAMPOS: WhatsApp y Correo ── -->
-        <div class="agx-input-icon-wrap">
-          <span class="material-symbols-outlined input-icon" style="font-size:20px;">phone_iphone</span>
-          <input class="agx-input" id="field-whatsapp" placeholder="WhatsApp (con código de país, ej: +57 300...)" type="tel"/>
-        </div>
-        <div class="agx-input-icon-wrap">
-          <span class="material-symbols-outlined input-icon" style="font-size:20px;">mail</span>
-          <input class="agx-input" id="field-email" placeholder="Correo Electrónico" type="email" style="text-transform:none;"/>
-        </div>
-        <!-- ── FIN NUEVOS CAMPOS ── -->
-
+        <input class="agx-input" id="field-website" placeholder="Sitio Web o Red Social" type="text"/>
+        <div class="agx-input-icon-wrap"><span class="material-symbols-outlined input-icon">phone_iphone</span><input class="agx-input" id="field-whatsapp" placeholder="WhatsApp (ej: +57 300...)" type="tel"/></div>
+        <div class="agx-input-icon-wrap"><span class="material-symbols-outlined input-icon">mail</span><input class="agx-input" id="field-email" placeholder="Correo Electrónico" type="email" style="text-transform:none;"/></div>
       </div>
-
-      <!-- Contexto adicional según plan -->
-      <div id="plan-extra-fields" class="space-y-4"></div>
-
-      <!-- Texto de cierre + CTA -->
-      <div class="border-t border-outline-variant/20 pt-8 space-y-6">
-        <div class="bg-surface-container-highest border-l-4 border-primary p-6">
-          <p class="font-label text-[11px] uppercase tracking-widest text-primary mb-2">Antes de continuar</p>
-          <p class="font-bold text-base leading-relaxed text-on-surface-variant">
-            Piensa bien tu <strong class="text-white">fecha y hora disponible</strong> para reunirnos. Nuestro equipo revisará tu caso antes de la llamada para que aproveches cada minuto del diagnóstico.
-          </p>
+      <div id="plan-extra-fields" class="space-y-3"></div>
+      <div class="border-t border-outline-variant/20 pt-6 md:pt-8 space-y-5">
+        <div class="bg-surface-container-highest border-l-4 border-primary p-5 md:p-6">
+          <p class="font-label text-[10px] uppercase tracking-widest text-primary mb-2">Antes de continuar</p>
+          <p class="font-bold text-sm leading-relaxed text-on-surface-variant">Piensa bien tu <strong class="text-white">fecha y hora disponible</strong> para reunirnos. Revisaremos tu caso antes de la llamada para aprovechar cada minuto.</p>
         </div>
-
-        <a id="calendar-btn" href="https://calendly.com/agorax/diagnostico" target="_blank"
-           class="w-full py-5 bg-primary text-on-primary font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-3 text-lg">
+        <a id="calendar-btn" href="https://calendar.app.google/HoeyJ8i7i9jV32FMA" target="_blank"
+           class="w-full py-4 md:py-5 bg-primary text-on-primary font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(0,232,122,0.4)] transition-all flex items-center justify-center gap-3 text-base">
           <span class="material-symbols-outlined">calendar_month</span>
           Agendar Reunión de Diagnóstico
         </a>
-        <p class="text-center font-label text-[10px] uppercase tracking-widest text-neutral-600">No es una llamada de venta. Es un diagnóstico real.</p>
+        <p class="text-center font-label text-[9px] uppercase tracking-widest text-on-surface-variant/40">No es una llamada de venta. Es un diagnóstico real.</p>
       </div>
-
     </div>
   </div>
 </div>
 
-
-<!-- ══════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════ JS ══════════════════════════════════════════ -->
 <script>
-/* ──────────────────────────────────────────
-   PUSH NOTIFICATIONS
-────────────────────────────────────────── */
-const notifMessages = [
-  { icon:"🇲🇽", text:"<strong>Marca de México</strong> acaba de agendar su diagnóstico." },
-  { icon:"🇨🇴", text:"<strong>3 negocios más</strong> se han unido esta semana." },
-  { icon:"👀", text:"<strong>12 e-commerce</strong> están viendo esta oferta ahora." },
-  { icon:"🇨🇱", text:"<strong>Tienda de Chile</strong> inició su Sprint de Validación." },
-  { icon:"🔥", text:"<strong>5 marcas</strong> solicitaron diagnóstico hoy." },
-  { icon:"🇺🇸", text:"<strong>Marca de EE.UU.</strong> pasó al plan Escalado Base." },
-  { icon:"⚡", text:"<strong>8 negocios</strong> están consultando los planes ahora mismo." },
-  { icon:"🇵🇪", text:"<strong>Tienda de Perú</strong> acaba de unirse al sistema." },
-  { icon:"🏆", text:"<strong>Nuevo cliente</strong> logró ROAS x18 en su primer mes." },
-  { icon:"🇪🇨", text:"<strong>Marca de Ecuador</strong> escaló su presupuesto x3 esta semana." },
+/* ── MOBILE MENU ── */
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  const menu = document.getElementById('mobile-menu');
+  menu.classList.toggle('open', menuOpen);
+  document.getElementById('ham1').style.transform = menuOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
+  document.getElementById('ham2').style.opacity = menuOpen ? '0' : '1';
+  document.getElementById('ham3').style.transform = menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+}
+
+/* ── PUSH NOTIFS ── */
+const notifMsgs = [
+  {icon:"🇲🇽",text:"<strong>Marca de México</strong> acaba de agendar su diagnóstico."},
+  {icon:"🇨🇴",text:"<strong>3 negocios más</strong> se han unido esta semana."},
+  {icon:"👀",text:"<strong>12 e-commerce</strong> están viendo esta oferta ahora."},
+  {icon:"🇨🇱",text:"<strong>Tienda de Chile</strong> inició su Sprint de Validación."},
+  {icon:"🔥",text:"<strong>5 marcas</strong> solicitaron diagnóstico hoy."},
+  {icon:"🇺🇸",text:"<strong>Marca de EE.UU.</strong> pasó al plan Escalado Base."},
+  {icon:"⚡",text:"<strong>8 negocios</strong> están consultando los planes ahora."},
+  {icon:"🇵🇪",text:"<strong>Tienda de Perú</strong> acaba de unirse al sistema."},
+  {icon:"🏆",text:"<strong>Nuevo cliente</strong> logró ROAS x18 en su primer mes."},
+  {icon:"🇪🇨",text:"<strong>Marca de Ecuador</strong> escaló su presupuesto x3."},
 ];
-
-let notifIndex = 0;
-const container = document.getElementById('notif-container');
-
-function showNotif() {
-  const data = notifMessages[notifIndex % notifMessages.length];
-  notifIndex++;
-
+let notifIdx = 0;
+const nc = document.getElementById('notif-container');
+function showNotif(){
+  const d = notifMsgs[notifIdx % notifMsgs.length]; notifIdx++;
   const el = document.createElement('div');
   el.className = 'notif-enter pointer-events-auto';
-  el.style.cssText = 'background:#131313;border:1px solid rgba(212,175,55,0.3);border-left:3px solid #D4AF37;padding:12px 16px;display:flex;align-items:center;gap:12px;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
-  el.innerHTML = `
-    <span style="font-size:22px;flex-shrink:0">${data.icon}</span>
-    <div style="flex:1;min-width:0">
-      <p style="font-family:'Space Grotesk',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#ffffff;line-height:1.4;">${data.text}</p>
-      <p style="font-family:'Space Grotesk',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#D4AF37;margin-top:3px;">Hace ${Math.floor(Math.random()*8)+1} min</p>
-    </div>
-    <div class="notif-dot" style="width:8px;height:8px;background:#D4AF37;flex-shrink:0;"></div>
-  `;
+  el.style.cssText = 'background:#0d0d0d;border:1px solid rgba(0,232,122,0.25);border-left:3px solid #00E87A;padding:10px 14px;display:flex;align-items:center;gap:10px;max-width:280px;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
+  el.innerHTML = `<span style="font-size:20px;flex-shrink:0">${d.icon}</span><div style="flex:1;min-width:0"><p style="font-family:'Space Grotesk',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#f0f0f0;line-height:1.4;">${d.text}</p><p style="font-family:'Space Grotesk',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#00E87A;margin-top:2px;">Hace ${Math.floor(Math.random()*8)+1} min</p></div><div class="notif-dot" style="width:7px;height:7px;background:#00E87A;flex-shrink:0;"></div>`;
+  nc.appendChild(el);
+  setTimeout(()=>{ el.className='notif-exit pointer-events-auto'; el.addEventListener('animationend',()=>el.remove()); }, 4500);
+}
+setTimeout(()=>{ showNotif(); setInterval(()=>showNotif(), 7000+Math.random()*3000); }, 3000);
 
-  container.appendChild(el);
+/* ── COUNTERS ── */
+function animateCounter(el){
+  const target=parseInt(el.dataset.target), suffix=el.dataset.suffix||'', dur=2000, start=performance.now();
+  function update(now){ const p=Math.min((now-start)/dur,1), e=1-Math.pow(1-p,3); el.textContent=Math.floor(e*target)+suffix; if(p<1)requestAnimationFrame(update); }
+  requestAnimationFrame(update);
+}
+new IntersectionObserver((ents)=>{ ents.forEach(e=>{ if(e.isIntersecting){animateCounter(e.target);e.target._obs?.unobserve(e.target);} }); },{threshold:.5}).observe && document.querySelectorAll('.counter-val').forEach(el=>{
+  const obs=new IntersectionObserver(e=>{ if(e[0].isIntersecting){animateCounter(el);obs.unobserve(el);} },{threshold:.5}); obs.observe(el);
+});
 
-  setTimeout(() => {
-    el.className = 'notif-exit pointer-events-auto';
-    el.addEventListener('animationend', () => el.remove());
-  }, 4500);
+/* ── SCROLL REVEAL ── */
+const ro=new IntersectionObserver(e=>e.forEach(x=>{ if(x.isIntersecting){x.target.classList.add('visible');ro.unobserve(x.target);} }),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* ── FAQ ── */
+function toggleFaq(btn){
+  const ans=btn.nextElementSibling, icon=btn.querySelector('.faq-icon'), open=ans.classList.contains('open');
+  document.querySelectorAll('.faq-answer.open').forEach(a=>{a.classList.remove('open');a.previousElementSibling.querySelector('.faq-icon').classList.remove('open');});
+  if(!open){ans.classList.add('open');icon.classList.add('open');}
 }
 
-// Start after 3s, then every 6-10s randomly
-setTimeout(() => {
-  showNotif();
-  setInterval(() => showNotif(), 7000 + Math.random() * 3000);
-}, 3000);
-
-
-/* ──────────────────────────────────────────
-   MODAL FORM
-────────────────────────────────────────── */
-const planData = {
-  sprint: {
-    label: 'Plan Sprint de Validación',
-    title: 'Sprint de Validación',
-    price: 'USD 280 / Mes',
-    calLink: 'https://calendar.app.google/HoeyJ8i7i9jV32FMA',
-    extra: [
-      { id:'field-monthly-budget', label:'¿Cuánto inviertes actualmente en pauta? (USD/mes)', placeholder:'Ej: $500 USD/mes', type:'text' },
-    ]
-  },
-  base: {
-    label: 'Plan Escalado Base',
-    title: 'Escalado Base',
-    price: 'USD 650 / Mes + 5% sobre excedente',
-    calLink: 'https://calendar.app.google/HoeyJ8i7i9jV32FMA',
-    extra: [
-      { id:'field-monthly-budget', label:'¿Cuánto inviertes actualmente en pauta? (USD/mes)', placeholder:'Ej: $2.000 USD/mes', type:'text' },
-      { id:'field-platforms', label:'¿En qué plataformas pautes actualmente?', placeholder:'Ej: Meta Ads, Google Ads...', type:'text' },
-    ]
-  },
-  enterprise: {
-    label: 'Plan Enterprise',
-    title: 'Enterprise',
-    price: 'Propuesta personalizada',
-    calLink: 'https://calendar.app.google/HoeyJ8i7i9jV32FMA',
-    extra: [
-      { id:'field-monthly-budget', label:'Volumen de inversión mensual en pauta (USD)', placeholder:'Ej: $15.000+ USD/mes', type:'text' },
-      { id:'field-platforms', label:'Plataformas y mercados activos', placeholder:'Ej: Meta, Google, TikTok / MX, CO...', type:'text' },
-      { id:'field-revenue', label:'Facturación mensual aproximada', placeholder:'Ej: $80.000 USD/mes', type:'text' },
-    ]
-  }
+/* ── MODAL ── */
+const planData={
+  sprint:{label:'Plan Sprint de Validación',title:'Sprint de Validación',price:'USD 280 / Mes',calLink:'https://calendar.app.google/HoeyJ8i7i9jV32FMA',extra:[{id:'field-monthly-budget',placeholder:'Inversión actual en pauta (USD/mes)  ·  Ej: $500',type:'text'}]},
+  base:{label:'Plan Escalado Base',title:'Escalado Base',price:'USD 650 / Mes + 5% excedente',calLink:'https://calendar.app.google/HoeyJ8i7i9jV32FMA',extra:[{id:'field-monthly-budget',placeholder:'Inversión actual en pauta (USD/mes)  ·  Ej: $2.000',type:'text'},{id:'field-platforms',placeholder:'Plataformas  ·  Ej: Meta Ads, Google Ads...',type:'text'}]},
+  enterprise:{label:'Plan Enterprise',title:'Enterprise',price:'Propuesta personalizada',calLink:'https://calendar.app.google/HoeyJ8i7i9jV32FMA',extra:[{id:'field-monthly-budget',placeholder:'Inversión mensual (USD)  ·  Ej: $15.000+',type:'text'},{id:'field-platforms',placeholder:'Plataformas y mercados activos',type:'text'},{id:'field-revenue',placeholder:'Facturación mensual  ·  Ej: $80.000 USD/mes',type:'text'}]}
 };
-
-function openForm(plan) {
-  const d = planData[plan];
-  document.getElementById('modal-plan-label').textContent = d.label;
-  document.getElementById('modal-plan-title').textContent = d.title;
-  document.getElementById('modal-plan-price').textContent = d.price;
-  document.getElementById('calendar-btn').href = d.calLink;
-
-  // Render extra fields
-  const container = document.getElementById('plan-extra-fields');
-  container.innerHTML = '';
-  if (d.extra && d.extra.length) {
-    const lbl = document.createElement('label');
-    lbl.className = 'font-label text-[11px] uppercase tracking-[0.25em] text-primary block';
-    lbl.textContent = 'Detalle del Plan';
-    container.appendChild(lbl);
-    d.extra.forEach(f => {
-      const inp = document.createElement('input');
-      inp.className = 'agx-input';
-      inp.id = f.id;
-      inp.placeholder = f.placeholder;
-      inp.type = f.type;
-      container.appendChild(inp);
-    });
+function openForm(plan){
+  const d=planData[plan];
+  document.getElementById('modal-plan-label').textContent=d.label;
+  document.getElementById('modal-plan-title').textContent=d.title;
+  document.getElementById('modal-plan-price').textContent=d.price;
+  document.getElementById('calendar-btn').href=d.calLink;
+  const c=document.getElementById('plan-extra-fields'); c.innerHTML='';
+  if(d.extra?.length){
+    const lbl=document.createElement('label'); lbl.className='font-label text-[10px] uppercase tracking-[0.25em] text-primary block'; lbl.textContent='Detalle del Plan'; c.appendChild(lbl);
+    d.extra.forEach(f=>{const i=document.createElement('input');i.className='agx-input';i.id=f.id;i.placeholder=f.placeholder;i.type=f.type;c.appendChild(i);});
   }
-
-  // Reset business type
-  document.querySelectorAll('.plan-opt').forEach(el => el.classList.remove('selected'));
-  document.getElementById('field-business-type').value = '';
-
-  // Reset basic fields
-  ['field-business-name','field-contact-name','field-website','field-whatsapp','field-email'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('field-country').selectedIndex = 0;
-
+  document.querySelectorAll('.plan-opt').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('field-business-type').value='';
+  ['field-business-name','field-contact-name','field-website','field-whatsapp','field-email'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('field-country').selectedIndex=0;
   document.getElementById('form-modal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('modal-box').scrollTop = 0;
+  document.body.style.overflow='hidden';
+  document.getElementById('modal-box').scrollTop=0;
 }
-
-function closeForm() {
-  document.getElementById('form-modal').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('form-modal')) closeForm();
-}
-
-function selectBusinessType(el, value) {
-  document.querySelectorAll('.plan-opt').forEach(opt => opt.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('field-business-type').value = value;
-}
+function closeForm(){document.getElementById('form-modal').classList.add('hidden');document.body.style.overflow='';}
+function handleOverlayClick(e){if(e.target===document.getElementById('form-modal'))closeForm();}
+function selectBusinessType(el,val){document.querySelectorAll('.plan-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');document.getElementById('field-business-type').value=val;}
 </script>
-
 </body>
 </html>
